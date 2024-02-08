@@ -1,5 +1,8 @@
 using NetSchool.Api;
 using NetSchool.Api.Configuration;
+using NetSchool.Context;
+using NetSchool.Context.Seeder;
+using NetSchool.Services.Logger;
 using NetSchool.Services.Settings;
 using NetSchool.Settings;
 
@@ -10,39 +13,42 @@ var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppLogger(mainSettings, logSettings);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+var services = builder.Services;
 
-builder.Services.AddAppAutoMappers();
-builder.Services.AddAppValidator();
-builder.Services.AddAppControllerAndViews();
-builder.Services.AddAppCors();
-builder.Services.AddAppHealthChecks();
-builder.Services.AddAppVersioning();
-builder.Services.AddAppSwagger(mainSettings, swaggerSettings);
+services.AddAppDbContext();
 
-builder.Services.RegisterServices();
+services.AddHttpContextAccessor();
+services.AddRazorPages();
+services.AddAppAutoMappers();
+services.AddAppValidator();
+services.AddAppControllerAndViews();
+services.AddAppCors();
+services.AddAppHealthChecks();
+services.AddAppVersioning();
+services.AddAppSwagger(mainSettings, swaggerSettings);
+
+services.RegisterServices();
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
 
 app.UseAppCors();
 app.UseAppHealthChecks();
 app.UseAppControllerAndViews();
 app.UseAppSwagger();
-
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapRazorPages();
 
+DbInitializer.Execute(app.Services);
+
+DbSeeder.Execute(app.Services);
+
+var logger = app.Services.GetRequiredService<IAppLogger>();
+
+logger.Information("The Api has started");
+
 app.Run();
+
+logger.Information("The Api has stopped");

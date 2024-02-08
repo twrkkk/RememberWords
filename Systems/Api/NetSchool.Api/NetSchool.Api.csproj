@@ -8,6 +8,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Serilog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
 		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="7.1.0" />
@@ -18,6 +22,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Data\NetSchool.Context.Migrations\NetSchool.Context.Migrations.MSSQL\NetSchool.Context.Migrations.MSSQL.csproj" />
+		<ProjectReference Include="..\..\..\Data\NetSchool.Context.Migrations\NetSchool.Context.Migrations.PgSql\NetSchool.Context.Migrations.PgSql.csproj" />
+		<ProjectReference Include="..\..\..\Data\NetSchool.Context.Seeder\NetSchool.Context.Seeder.csproj" />
+		<ProjectReference Include="..\..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Logger\NetSchool.Services.Logger.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Settings\NetSchool.Services.Settings.csproj" />
 		<ProjectReference Include="..\..\..\Shared\NetSchool.Common\NetSchool.Common.csproj" />

@@ -15,13 +15,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{09F3A700-AB9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{882F0650-D226-4C80-B15F-5D99298BDFC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Api", "Systems\Api\NetSchool.Api\NetSchool.Api.csproj", "{207D8FD9-AE5F-4DE7-B7F1-8FB996D135C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Api", "Systems\Api\NetSchool.Api\NetSchool.Api.csproj", "{207D8FD9-AE5F-4DE7-B7F1-8FB996D135C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Common", "Shared\NetSchool.Common\NetSchool.Common.csproj", "{B3AE94A8-396E-43D1-9043-5D35A6F2E45D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Common", "Shared\NetSchool.Common\NetSchool.Common.csproj", "{B3AE94A8-396E-43D1-9043-5D35A6F2E45D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Settings", "Services\NetSchool.Services.Settings\NetSchool.Services.Settings.csproj", "{5D434C4A-0BD8-4407-8AE3-762917AB9F7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Logger", "Services\NetSchool.Services.Logger\NetSchool.Services.Logger.csproj", "{5F0B0715-8659-4D1A-B3F0-9A7E46C76E4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Context", "Data\NetSchool.Context\NetSchool.Context.csproj", "{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Context.Entities", "Data\NetSchool.Context.Entities\NetSchool.Context.Entities.csproj", "{BFF3FE4E-F098-4834-AC24-1C979A216D80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{13B3D509-8EF3-4A48-B0BD-77848D5DCF66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Context.Migrations.MSSQL", "Data\NetSchool.Context.Migrations\NetSchool.Context.Migrations.MSSQL\NetSchool.Context.Migrations.MSSQL.csproj", "{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Context.Migrations.PgSql", "Data\NetSchool.Context.Migrations\NetSchool.Context.Migrations.PgSql\NetSchool.Context.Migrations.PgSql.csproj", "{AE7F5C82-FA7E-4252-800E-12DB40B6E84F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Context.Seeder", "Data\NetSchool.Context.Seeder\NetSchool.Context.Seeder.csproj", "{AF0D1E14-9955-4C5F-8704-C8E796538291}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +57,26 @@ Global
 		{5F0B0715-8659-4D1A-B3F0-9A7E46C76E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0B0715-8659-4D1A-B3F0-9A7E46C76E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0B0715-8659-4D1A-B3F0-9A7E46C76E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFF3FE4E-F098-4834-AC24-1C979A216D80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFF3FE4E-F098-4834-AC24-1C979A216D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFF3FE4E-F098-4834-AC24-1C979A216D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFF3FE4E-F098-4834-AC24-1C979A216D80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0D1E14-9955-4C5F-8704-C8E796538291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0D1E14-9955-4C5F-8704-C8E796538291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0D1E14-9955-4C5F-8704-C8E796538291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0D1E14-9955-4C5F-8704-C8E796538291}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +88,12 @@ Global
 		{B3AE94A8-396E-43D1-9043-5D35A6F2E45D} = {17AF3AA4-D6BA-4CB5-8200-8F501548167B}
 		{5D434C4A-0BD8-4407-8AE3-762917AB9F7B} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 		{5F0B0715-8659-4D1A-B3F0-9A7E46C76E4B} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{90ED07CE-FF49-4DEF-AF1F-C03D726DA74C} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
+		{BFF3FE4E-F098-4834-AC24-1C979A216D80} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
+		{13B3D509-8EF3-4A48-B0BD-77848D5DCF66} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
+		{7E2DAEF7-CA91-4FB8-8E09-D03FDBF1746F} = {13B3D509-8EF3-4A48-B0BD-77848D5DCF66}
+		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F} = {13B3D509-8EF3-4A48-B0BD-77848D5DCF66}
+		{AF0D1E14-9955-4C5F-8704-C8E796538291} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}
