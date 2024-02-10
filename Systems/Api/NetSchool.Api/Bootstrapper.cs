@@ -1,5 +1,6 @@
 ﻿using NetSchool.Services.Settings;
 using NetSchool.Services.Logger;
+using NetSchool.Services.CardCollections;
 
 namespace NetSchool.Api;
 
@@ -10,7 +11,9 @@ public static class Bootstrapper
         services.AddMainSettings()
             .AddSwaggerSettings()
             .AddLogSettings()
-            .AddAppLogger();
+            .AddAppLogger()
+            .AddCartCollectionService()
+            ;
 
         return services;
     }

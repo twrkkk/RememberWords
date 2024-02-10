@@ -43,9 +43,13 @@ public static class DbSeeder
         if (await context.CardCollections.AnyAsync())
             return;
 
-        var cardCollections = new DemoHelper().GetCardCollections;
+        var user = DemoHelper.GetUser;
+        var cardCollections = DemoHelper.GetCardCollections;
+
+        user.CardCollections = cardCollections.ToList();
 
         await context.CardCollections.AddRangeAsync(cardCollections);
+        await context.Users.AddAsync(user);
 
         await context.SaveChangesAsync();
     }

@@ -10,6 +10,7 @@ using NetSchool.Context.Context.Configuration;
 public class MainDbContext : DbContext
 {
     public DbSet<CardCollection> CardCollections { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) { }
 

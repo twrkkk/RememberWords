@@ -2,9 +2,15 @@
 
 using NetSchool.Context.Entities;
 
-public class DemoHelper
+public static class DemoHelper
 {
-    public IEnumerable<CardCollection> GetCardCollections = new List<CardCollection>
+    public static User GetUser = new User
+    {
+        NickName = "bob228",
+        Status = UserStatus.Active,
+    };
+
+    public static IEnumerable<CardCollection> GetCardCollections = new List<CardCollection>
     {
         new CardCollection()
         {
