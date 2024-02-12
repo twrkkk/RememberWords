@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NetSchool.Common.Exceptions;
 using NetSchool.Services.CardCollections;
 using NetSchool.Services.CardCollections.CardCollections;
 using NetSchool.Services.Logger;
@@ -30,12 +31,15 @@ namespace NetSchool.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var result = await _cartCollectionService.GetById(id);
-
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+            try
+            {
+                var result = await _cartCollectionService.Get(id);
+                return Ok(result);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("")]
@@ -47,15 +51,33 @@ namespace NetSchool.Api.Controllers
         }
 
         [HttpPut("{id:Guid}")]
-        public async Task Update([FromRoute] Guid id, UpdateModel request)
+        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateModel request)
         {
-            await _cartCollectionService.Update(id, request);
+            try
+            {
+                await _cartCollectionService.Update(id, request);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         [HttpDelete("{id:Guid}")]
-        public async Task Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            await _cartCollectionService.Delete(id);
+            try
+            {
+                await _cartCollectionService.Delete(id);
+            }
+            catch
+            {
+                return BadRequest($"Collection (ID = {id}) not found.");
+            }
+
+            return Ok();
         }
     }
 }

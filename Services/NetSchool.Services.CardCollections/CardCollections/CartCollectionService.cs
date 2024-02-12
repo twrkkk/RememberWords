@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using NetSchool.Common.Exceptions;
 using NetSchool.Common.Validator;
@@ -36,7 +37,7 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
-    public async Task<CardCollectionModel> GetById(Guid id)
+    public async Task<CardCollectionModel> Get(Guid id)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -44,6 +45,9 @@ public class CartCollectionService : ICartCollectionService
             .Include(x => x.User)
             .Include(x => x.Cards)
             .FirstOrDefaultAsync(x => x.Uid == id);
+
+        if (collection == null)
+            throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
 
         var result = _mapper.Map<CardCollectionModel>(collection);
 
@@ -76,7 +80,7 @@ public class CartCollectionService : ICartCollectionService
         var collection = await context.CardCollections.FirstOrDefaultAsync(x => x.Uid == id);
 
         if (collection == null)
-            throw new ProcessException($"Collection (ID = {id}) not found.");
+            throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
 
         context.CardCollections.Remove(collection);
 
@@ -90,6 +94,9 @@ public class CartCollectionService : ICartCollectionService
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
         var collection = await context.CardCollections.FirstOrDefaultAsync(x => x.Uid == id);
+
+        if (collection == null)
+            throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
 
         foreach (var cardToUpdate in model.Cards)
         {
