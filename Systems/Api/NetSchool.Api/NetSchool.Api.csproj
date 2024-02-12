@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Coravel" Version="5.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
 		  <PrivateAssets>all</PrivateAssets>
@@ -28,8 +29,13 @@
 		<ProjectReference Include="..\..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Logger\NetSchool.Services.Logger.csproj" />
+		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Scheduler\NetSchool.Services.Scheduler.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Settings\NetSchool.Services.Settings.csproj" />
 		<ProjectReference Include="..\..\..\Shared\NetSchool.Common\NetSchool.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="logs\" />
 	</ItemGroup>
 
 </Project>

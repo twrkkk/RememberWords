@@ -72,9 +72,9 @@ namespace NetSchool.Api.Controllers
             {
                 await _cartCollectionService.Delete(id);
             }
-            catch
+            catch (EntityNotFoundException ex)
             {
-                return BadRequest($"Collection (ID = {id}) not found.");
+                return BadRequest(ex.Message);
             }
 
             return Ok();

@@ -1,3 +1,4 @@
+using Coravel;
 using NetSchool.Api;
 using NetSchool.Api.Configuration;
 using NetSchool.Context;
@@ -26,6 +27,8 @@ services.AddAppCors();
 services.AddAppHealthChecks();
 services.AddAppVersioning();
 services.AddAppSwagger(mainSettings, swaggerSettings);
+services.AddScheduler();
+services.AddAppDeleteExpiredCollectionsScheduler();
 
 services.RegisterServices();
 
@@ -40,6 +43,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.MapRazorPages();
+app.UseAppDeleteExpiredCollectionsScheduler();
 
 DbInitializer.Execute(app.Services);
 
