@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Context.Migration
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Context.Seeder", "Data\NetSchool.Context.Seeder\NetSchool.Context.Seeder.csproj", "{AF0D1E14-9955-4C5F-8704-C8E796538291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Services.CardCollections", "Services\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj", "{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.CardCollections", "Services\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj", "{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Scheduler", "Services\NetSchool.Services.Scheduler\NetSchool.Services.Scheduler.csproj", "{8D365642-C566-4479-98AB-18BA747157F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D365642-C566-4479-98AB-18BA747157F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D365642-C566-4479-98AB-18BA747157F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D365642-C566-4479-98AB-18BA747157F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D365642-C566-4479-98AB-18BA747157F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{AE7F5C82-FA7E-4252-800E-12DB40B6E84F} = {13B3D509-8EF3-4A48-B0BD-77848D5DCF66}
 		{AF0D1E14-9955-4C5F-8704-C8E796538291} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
 		{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{8D365642-C566-4479-98AB-18BA747157F2} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}

@@ -22,11 +22,7 @@ public class DeleteExpiredCollections : IInvocable
 
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        var collectionsToDelete = context.CardCollections.Where(x=>x.TimeExpiration <=  DateTime.UtcNow);
-
-        context.CardCollections.RemoveRange(collectionsToDelete);
-
-        await context.SaveChangesAsync();
+        await context.Database.ExecuteSqlRawAsync("DELETE FROM card_collections AS c WHERE c.\"TimeExpiration\" <= CURRENT_TIMESTAMP");
 
         _logger.Information("Delete Expired Collections Scheduler has stopped");
     }
