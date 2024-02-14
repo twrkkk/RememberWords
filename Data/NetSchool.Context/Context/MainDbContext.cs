@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using NetSchool.Context.Entities;
 using NetSchool.Context.Context.Configuration;
 
-public class MainDbContext : DbContext
+public class MainDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public DbSet<CardCollection> CardCollections { get; set; }
-    public DbSet<User> Users { get; set; }
 
     public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) { }
 

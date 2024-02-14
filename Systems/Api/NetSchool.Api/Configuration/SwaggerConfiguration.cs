@@ -24,8 +24,8 @@ public static class SwaggerConfiguration
     /// <param name="swaggerSettings"></param>
     public static IServiceCollection AddAppSwagger(this IServiceCollection services, 
         MainSettings mainSettings, 
-        SwaggerSettings swaggerSettings
-        //IdentitySettings identitySettings
+        SwaggerSettings swaggerSettings,
+        IdentitySettings identitySettings
         )
     {
         if (!swaggerSettings.Enabled)
@@ -59,36 +59,36 @@ public static class SwaggerConfiguration
             if (File.Exists(xmlPath))
                 options.IncludeXmlComments(xmlPath);
 
-            //options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-            //{
-            //    Name = "Bearer",
-            //    Type = SecuritySchemeType.OAuth2,
-            //    Scheme = "oauth2",
-            //    BearerFormat = "JWT",
-            //    In = ParameterLocation.Header,
-            //    Flows = new OpenApiOAuthFlows
-            //    {
-            //        ClientCredentials = new OpenApiOAuthFlow
-            //        {
-            //            TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
-            //            Scopes = new Dictionary<string, string>
-            //            {
-            //                { AppScopes.BooksRead, "Read" },
-            //                { AppScopes.BooksWrite, "Write" }
-            //            }
-            //        },
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            {
+                Name = "Bearer",
+                Type = SecuritySchemeType.OAuth2,
+                Scheme = "oauth2",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Flows = new OpenApiOAuthFlows
+                {
+                    ClientCredentials = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { AppScopes.CollectionsRead, "Read" },
+                            { AppScopes.CollectionsWrite, "Write" }
+                        }
+                    },
 
-            //        Password = new OpenApiOAuthFlow
-            //        {
-            //            TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
-            //            Scopes = new Dictionary<string, string>
-            //            {
-            //                { AppScopes.BooksRead, "Read" },
-            //                { AppScopes.BooksWrite, "Write" }
-            //            }
-            //        }
-            //    }
-            //});
+                    Password = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { AppScopes.CollectionsRead, "Read" },
+                            { AppScopes.CollectionsWrite, "Write" }
+                        }
+                    }
+                }
+            });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

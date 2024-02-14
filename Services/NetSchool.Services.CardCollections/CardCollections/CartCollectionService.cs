@@ -62,7 +62,7 @@ public class CartCollectionService : ICartCollectionService
 
         var collection = _mapper.Map<CardCollection>(model);
 
-        var user = context.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Uid == model.UserId);
+        var user = context.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Id == model.UserId);
         if (user != null)
         {
             user.CardCollections.Add(collection);

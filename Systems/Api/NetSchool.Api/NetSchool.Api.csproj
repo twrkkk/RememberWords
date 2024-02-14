@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageReference Include="Coravel" Version="5.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
@@ -32,6 +33,7 @@
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Scheduler\NetSchool.Services.Scheduler.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Settings\NetSchool.Services.Settings.csproj" />
 		<ProjectReference Include="..\..\..\Shared\NetSchool.Common\NetSchool.Common.csproj" />
+		<ProjectReference Include="..\NetSchool.Api.Settings\NetSchool.Api.Settings.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

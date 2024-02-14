@@ -14,7 +14,7 @@ public static class SchedulerConfiguration
 
     public static void UseAppDeleteExpiredCollectionsScheduler(this WebApplication app)
     {
-        var configuration = Settings.Settings.Load<SchedulerSettings>("SchedulerSettings");
+        var configuration = NetSchool.Settings.Settings.Load<SchedulerSettings>("SchedulerSettings");
 
         app.Services.UseScheduler(scheduler =>
         {

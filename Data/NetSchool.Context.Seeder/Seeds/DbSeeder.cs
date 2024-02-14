@@ -1,8 +1,10 @@
 ﻿namespace NetSchool.Context.Seeder;
 
+using Castle.Core.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NetSchool.Context.Entities;
+using NetSchool.Services.UserAccount;
 using System;
 
 public static class DbSeeder
@@ -22,6 +24,7 @@ public static class DbSeeder
     {
         Task.Run(async () =>
             {
+                await AddAdministrator(serviceProvider);
                 await AddDemoData(serviceProvider);
             })
             .GetAwaiter()
@@ -52,5 +55,28 @@ public static class DbSeeder
         await context.Users.AddAsync(user);
 
         await context.SaveChangesAsync();
+    }
+
+    private static async Task AddAdministrator(IServiceProvider serviceProvider)
+    {
+        using var scope = ServiceScope(serviceProvider);
+        if (scope == null)
+            return;
+
+        var settings = scope.ServiceProvider.GetService<DbSettings>();
+        if (!(settings.Init?.AddAdministrator ?? false))
+            return;
+
+        var userAccountService = scope.ServiceProvider.GetService<IUserAccountService>();
+
+        if (!(await userAccountService.IsEmpty()))
+            return;
+
+        await userAccountService.Create(new RegisterUserAccountModel()
+        {
+            UserName = settings.Init.Administrator.Name,
+            Email = settings.Init.Administrator.Email,
+            Password = settings.Init.Administrator.Password,
+        });
     }
 }

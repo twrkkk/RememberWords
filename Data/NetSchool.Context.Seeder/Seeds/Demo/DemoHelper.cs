@@ -6,8 +6,9 @@ public static class DemoHelper
 {
     public static User GetUser = new User
     {
-        NickName = "bob228",
+        UserName = "bob228",
         Status = UserStatus.Active,
+        RegistrationDate = DateTime.UtcNow,
     };
 
     public static IEnumerable<CardCollection> GetCardCollections = new List<CardCollection>

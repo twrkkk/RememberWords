@@ -1,9 +1,10 @@
-﻿namespace NetSchool.Context.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User: BaseEntity
+namespace NetSchool.Context.Entities;
+
+public class User : IdentityUser<Guid>
 {
-    public string NickName { get; set; }
     public UserStatus Status { get; set; }
     public virtual ICollection<CardCollection> CardCollections { get; set; }
-    //public DateTime? RegistratonDate { get; set; }
+    public DateTime? RegistrationDate { get; set; }
 }

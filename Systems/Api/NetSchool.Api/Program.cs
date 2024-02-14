@@ -10,6 +10,7 @@ using NetSchool.Settings;
 var mainSettings = Settings.Load<MainSettings>("Main");
 var logSettings = Settings.Load<LogSettings>("Log");
 var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
+var identitySettings = Settings.Load<IdentitySettings>("Identity");
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppLogger(mainSettings, logSettings);
@@ -26,9 +27,10 @@ services.AddAppControllerAndViews();
 services.AddAppCors();
 services.AddAppHealthChecks();
 services.AddAppVersioning();
-services.AddAppSwagger(mainSettings, swaggerSettings);
+services.AddAppSwagger(mainSettings, swaggerSettings, identitySettings);
 services.AddScheduler();
 services.AddAppDeleteExpiredCollectionsScheduler();
+services.AddAppAuth(identitySettings);
 
 services.RegisterServices();
 
@@ -37,6 +39,7 @@ var app = builder.Build();
 
 app.UseAppCors();
 app.UseAppHealthChecks();
+app.UseAppAuth();
 app.UseAppControllerAndViews();
 app.UseAppSwagger();
 app.UseStaticFiles();

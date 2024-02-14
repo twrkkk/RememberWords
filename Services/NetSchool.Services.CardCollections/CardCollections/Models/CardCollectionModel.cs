@@ -44,7 +44,7 @@ public class CardCollectionModelProfile : Profile
             var collection = db.CardCollections.Include(x => x.User).Include(x => x.Cards).FirstOrDefault(x => x.Id == source.Id);
 
             destination.Id = collection.Uid;
-            destination.UserId = collection.User.Uid;
+            destination.UserId = collection.User.Id;
             destination.Cards = source.Cards.Select(x => new CardModel { Id = x.Uid, Front = x.Front, Reverse = x.Reverse });
         }
     }

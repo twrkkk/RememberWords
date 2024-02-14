@@ -39,6 +39,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.CardColl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Scheduler", "Services\NetSchool.Services.Scheduler\NetSchool.Services.Scheduler.csproj", "{8D365642-C566-4479-98AB-18BA747157F2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{1059D9FA-7F6B-485C-8202-055296873C14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Identity", "Systems\Identity\NetSchool.Identity\NetSchool.Identity.csproj", "{1020513A-CFD6-4BD6-ABF4-BE3478176DC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.UserAccount", "Services\NetSchool.Services.UserAccount\NetSchool.Services.UserAccount.csproj", "{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Api.Settings", "Systems\Api\NetSchool.Api.Settings\NetSchool.Api.Settings.csproj", "{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +97,18 @@ Global
 		{8D365642-C566-4479-98AB-18BA747157F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D365642-C566-4479-98AB-18BA747157F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D365642-C566-4479-98AB-18BA747157F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +128,10 @@ Global
 		{AF0D1E14-9955-4C5F-8704-C8E796538291} = {40372B2D-6AD8-49AA-BBFB-853F7A10E62C}
 		{EC7EFD7C-4139-4A15-B432-C01D86EC1EF0} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 		{8D365642-C566-4479-98AB-18BA747157F2} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{1059D9FA-7F6B-485C-8202-055296873C14} = {2ADFD4DD-C0D0-49E1-8079-B65867416AC8}
+		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5} = {1059D9FA-7F6B-485C-8202-055296873C14}
+		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0} = {09F3A700-AB9F-4F7E-BCB0-63896BDB3142}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}

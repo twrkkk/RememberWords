@@ -21,7 +21,6 @@ public class CreateModelProfile : Profile
     {
         CreateMap<CreateModel, CardCollection>()
             .BeforeMap<CardCollectionActions>()
-            .ForMember(dest => dest.UserId, opt => opt.Ignore())
             .ForMember(dest => dest.User, opt => opt.Ignore())
             .ForMember(dest => dest.TimeExpiration, opt => opt.MapFrom(src => src.CreationTime))
             ;
@@ -40,9 +39,8 @@ public class CreateModelProfile : Profile
         {
             using var db = contextFactory.CreateDbContext();
 
-            var user = db.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Uid == source.UserId);
+            var user = db.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Id == source.UserId);
 
-            destination.UserId = user.Id;
             destination.User = user;
         }
     }
@@ -62,7 +60,7 @@ public class CreateModelValidator : AbstractValidator<CreateModel>
         RuleFor(x => x.UserId).Must((id) =>
             {
                 using var context = contextFactory.CreateDbContext();
-                var found = context.Users.Any(a => a.Uid == id);
+                var found = context.Users.Any(a => a.Id == id);
                 return found;
             }).WithMessage("User not found");
     }
