@@ -10,7 +10,6 @@ public class UpdateModel
     public string Name { get; set; }
     public IEnumerable<CardModel> Cards { get; set; }
 }
-
 public class UpdateModelValidator : AbstractValidator<UpdateModel>
 {
     public UpdateModelValidator(IDbContextFactory<MainDbContext> contextFactory)

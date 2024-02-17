@@ -19,7 +19,7 @@ public static class SchedulerConfiguration
         app.Services.UseScheduler(scheduler =>
         {
             scheduler.Schedule<DeleteExpiredCollections>()
-            .EverySeconds(configuration.DeleteExpiredCollections.Frequency);
+            .EveryTenMinutes();// (configuration.DeleteExpiredCollections.Frequency);
         });
     }
 }

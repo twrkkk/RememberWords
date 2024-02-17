@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  memorizing_postgresql:
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Passw0rd
+    ports:
+      - "45432:5432"
+    networks:
+      - shared_netschool_net
+    volumes:      
+      - ~/.docker-conf/postgresql/data/:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
+
+  # memorizing_rabbitmq:
+  #  ports:
+  #    - "5672:5672"
+  #    - "5673:5673"
+  #    - "15672:15672" 
+  #  networks:
+  #    - shared_netschool_net
+  #  volumes:      
+  #    - /var/lib/rabbitmq
+    
+
+  memorizing_api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10000:8080"
+    networks:
+      - shared_netschool_net
+    env_file:
+      - env.api
+
+  # dsrnetschool_worker_1:
+  #  networks:
+  #    - shared_netschool_net
+  #  ports:
+  #    - "10001:80"
+  #  env_file:
+  #    - env.worker
+
+  # dsrnetschool_worker_2:
+  #  networks:
+  #    - shared_netschool_net
+  #  ports:
+  #    - "10002:80"
+  #  env_file:
+  #    - env.worker
+
+  memorizing_identity:
+    ports:
+      - "10003:8080"
+    networks:
+      - shared_netschool_net
+    env_file:
+      - env.identity
+
+networks:
+  shared_netschool_net:
+    name: net_school
+    driver: bridge

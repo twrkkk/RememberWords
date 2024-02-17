@@ -45,7 +45,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Identity", "Syste
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.UserAccount", "Services\NetSchool.Services.UserAccount\NetSchool.Services.UserAccount.csproj", "{E705AEC8-B042-4B33-A2C1-01D9A8D694D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Api.Settings", "Systems\Api\NetSchool.Api.Settings\NetSchool.Api.Settings.csproj", "{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Api.Settings", "Systems\Api\NetSchool.Api.Settings\NetSchool.Api.Settings.csproj", "{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web", "Systems\Web\NetSchool.Web\NetSchool.Web.csproj", "{DB62AF27-9896-4DEB-A837-16B7E12F0D09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{B033D305-6F98-4E35-9BFE-E7CF99ADF96D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web.Services.Configuration", "Systems\Web\NetSchool.Web.Services.Configuration\NetSchool.Web.Services.Configuration.csproj", "{75EB2783-0FC5-405F-B5B7-84A86973160A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web.Services.CardCollections", "Systems\Web\NetSchool.Web.Services.CardCollections\NetSchool.Web.Services.CardCollections.csproj", "{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entities", "Entities", "{F1B3919D-990C-46DC-8982-E393A7C40E83}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web.Entities", "Systems\Web\NetSchool.Web.Entities\NetSchool.Web.Entities.csproj", "{3DC386BB-027F-4718-9712-12A105775BF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_docker", "_docker", "{1B3A5AD9-8D5C-461C-8BEC-2C1092C2B652}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+		env.api = env.api
+		env.identity = env.identity
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +129,22 @@ Global
 		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB62AF27-9896-4DEB-A837-16B7E12F0D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB62AF27-9896-4DEB-A837-16B7E12F0D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB62AF27-9896-4DEB-A837-16B7E12F0D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB62AF27-9896-4DEB-A837-16B7E12F0D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75EB2783-0FC5-405F-B5B7-84A86973160A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75EB2783-0FC5-405F-B5B7-84A86973160A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75EB2783-0FC5-405F-B5B7-84A86973160A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75EB2783-0FC5-405F-B5B7-84A86973160A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC386BB-027F-4718-9712-12A105775BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC386BB-027F-4718-9712-12A105775BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC386BB-027F-4718-9712-12A105775BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC386BB-027F-4718-9712-12A105775BF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +168,12 @@ Global
 		{1020513A-CFD6-4BD6-ABF4-BE3478176DC5} = {1059D9FA-7F6B-485C-8202-055296873C14}
 		{E705AEC8-B042-4B33-A2C1-01D9A8D694D6} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 		{4AB4177F-D5BD-4B88-991A-19BB1E9C18A0} = {09F3A700-AB9F-4F7E-BCB0-63896BDB3142}
+		{DB62AF27-9896-4DEB-A837-16B7E12F0D09} = {882F0650-D226-4C80-B15F-5D99298BDFC6}
+		{B033D305-6F98-4E35-9BFE-E7CF99ADF96D} = {882F0650-D226-4C80-B15F-5D99298BDFC6}
+		{75EB2783-0FC5-405F-B5B7-84A86973160A} = {B033D305-6F98-4E35-9BFE-E7CF99ADF96D}
+		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07} = {B033D305-6F98-4E35-9BFE-E7CF99ADF96D}
+		{F1B3919D-990C-46DC-8982-E393A7C40E83} = {882F0650-D226-4C80-B15F-5D99298BDFC6}
+		{3DC386BB-027F-4718-9712-12A105775BF5} = {F1B3919D-990C-46DC-8982-E393A7C40E83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}

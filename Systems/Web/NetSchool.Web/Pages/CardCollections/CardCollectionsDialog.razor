@@ -1,0 +1,76 @@
+﻿@using NetSchool.Web.Entities.CardCollections
+@using NetSchool.Web.Services.CardCollections
+@inherits MudComponentBase
+
+@inject ICardCollectionsService CardCollectionsService
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Name" @bind-Value="Model.Name"
+                                  For="@(() => Model.Name)"
+                                  Required="true"
+                                  RequiredError="Name is required!">
+                    </MudTextField>
+                </MudItem>
+                @* <MudItem xs="12" sm="6">
+                    <MudSelect @ref="selectAuthor" T="Guid" Label="Author" @bind-Value="Model.AuthorId" For="@(() => Model.AuthorId)">
+                        <MudSelectItem T="Guid" Value="Guid.Empty">&nbsp;</MudSelectItem>
+                        @foreach (var author in Authors)
+                        {
+                            <MudSelectItem T="Guid" Value="@author.Id">@author.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Description"
+                                  Lines="5"
+                                  For="@(() => Model.Description)"
+                                  @bind-Value="Model.Description">
+                    </MudTextField>
+                </MudItem> *@
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public Guid? CollectionId { get; set; }
+
+    [Parameter] public CreateModel Model { get; set; } = new();
+
+    private MudForm form = default!;
+
+    MudSelect<Guid> selectAuthor = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CollectionId != null)
+        {
+            var collection = await CardCollectionsService.Get(CollectionId.Value);
+
+            Model.UserId = collection.UserId;
+            Model.Name = collection.Name;
+            Model.Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse });
+        }
+    }
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

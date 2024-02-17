@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+		<PackageReference Include="MudBlazor" Version="6.15.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NetSchool.Web.Entities\NetSchool.Web.Entities.csproj" />
+		<ProjectReference Include="..\NetSchool.Web.Services.CardCollections\NetSchool.Web.Services.CardCollections.csproj" />
+		<ProjectReference Include="..\NetSchool.Web.Services.Configuration\NetSchool.Web.Services.Configuration.csproj" />
+	</ItemGroup>
+
+</Project>

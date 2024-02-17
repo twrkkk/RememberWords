@@ -1,0 +1,144 @@
+﻿@page "/collections"
+@using Microsoft.AspNetCore.Authorization
+@using NetSchool.Web.Components
+@using NetSchool.Web.Entities.CardCollections
+@using NetSchool.Web.Services.CardCollections
+@inject ICardCollectionsService CardCollectionsService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+@* @attribute [Authorize] *@
+@layout MainLayout
+
+<PageTitle>Card Collections</PageTitle>
+
+<MudText Typo="Typo.h4" Class="ma-8">Card Collections</MudText>
+
+<MudTable Items="@collections" Class="ma-8">
+    <ColGroup>
+        <col style="width:50px;" />
+        <col />
+        <col />
+        <col />
+        <col style="width:100px;" />
+    </ColGroup>
+    <ToolBarContent>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCollection">Add</MudButton>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>UserId</MudTh>
+        <MudTh>TimeExpiration</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="UserId">@context.UserId</MudTd>
+            <MudTd DataLabel="TimeExpiration">@context.TimeExpiraton</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+
+    @code {
+    private IEnumerable<CardCollectionModel> collections = new List<CardCollectionModel>();
+    private string searchString = string.Empty;
+
+    private async Task ReloadData()
+    {
+        collections = await CardCollectionsService.GetAll();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task AddCollection()
+    {
+        // var parameters = new DialogParameters { };
+        // var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        // var dialog = await DialogService.ShowAsync<CardCollectionsDialog>("Add new collection", parameters, options);
+        // var result = await dialog.Result;
+
+        // if (result.Canceled)
+        //     return;
+
+        // try
+        // {
+        //     var collectionModel = ((CardCollectionsDialog)dialog.Dialog).Model;
+        //     var createModel = new CreateModel()
+        //         {
+        //             UserId = collectionModel.UserId,
+        //             Name = collectionModel.Name,
+        //             Cards = collectionModel.Cards
+        //         };
+
+        //     await CardCollectionsService.Create(createModel);
+        //     await ReloadData();
+        // }
+        // catch (Exception ex)
+        // {
+        //     Snackbar.Add(ex.Message, Severity.Error);
+        // }
+    }
+
+    private async Task EditCollection(Guid bookId)
+    {
+        // var parameters = new DialogParameters();
+        // parameters.Add("BookId", bookId);
+
+        // var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        // var dialog = DialogService.Show<BookDialog>("Edit book", parameters, options);
+        // var result = await dialog.Result;
+
+        // if (result.Canceled)
+        //     return;
+
+        // var model = ((BookDialog)dialog.Dialog).Model;
+        // var updateModel = new UpdateModel()
+        // {
+        //     Description = model.Description,
+        //     Title = model.Title
+        // };
+
+        // await BookService.EditBook(bookId, updateModel);
+        // await ReloadData();
+    }
+
+    private async Task DeleteCollection(Guid id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this collection? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete book", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        await CardCollectionsService.Delete(id);
+        await ReloadData();
+    }
+}
