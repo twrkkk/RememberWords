@@ -5,6 +5,7 @@ using NetSchool.Common.Exceptions;
 using NetSchool.Common.Validator;
 using NetSchool.Context;
 using NetSchool.Context.Entities;
+using System.Runtime.CompilerServices;
 
 namespace NetSchool.Services.CardCollections.CardCollections;
 
@@ -65,6 +66,7 @@ public class CartCollectionService : ICartCollectionService
         var user = context.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Id == model.UserId);
         if (user != null)
         {
+            collection.TimeExpiration = DateTime.UtcNow.AddDays(7);
             user.CardCollections.Add(collection);
         }
 
@@ -101,11 +103,17 @@ public class CartCollectionService : ICartCollectionService
         foreach (var cardToUpdate in model.Cards)
         {
             var card = collection.Cards.FirstOrDefault(x => x.Uid == cardToUpdate.Id);
-            if (card != null)
+            if (card != null) // update exist card
             {
                 card.Front = cardToUpdate.Front;
                 card.Reverse = cardToUpdate.Reverse;
             }
+            else //create new card
+            {
+                var newCard = _mapper.Map<Card>(cardToUpdate);
+                collection.Cards.Add(newCard);
+            }
+
         }
 
         collection.Name = model.Name;

@@ -1,0 +1,45 @@
+﻿<!-- CustomCard.razor -->
+@using MudBlazor
+
+<MudCard>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="1">
+                <div class="card-index">@Index</div>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField Value="Front" Label="Термин" Variant="Variant.Filled" />
+                <MudTextField Value="Reverse" Label="Определение" Variant="Variant.Filled" />
+            </MudItem>
+            <MudItem xs="5">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Delete">Удалить</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public int Index { get; set; }
+
+    [Parameter]
+    public string Front { get; set; }
+
+    [Parameter]
+    public string Reverse { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<string> FrontChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ReverseChanged { get; set; }
+
+    private async Task Delete()
+    {
+        await OnDelete.InvokeAsync(Index);
+    }
+}

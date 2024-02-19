@@ -6,6 +6,7 @@
 @inject ICardCollectionsService CardCollectionsService
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject NavigationManager NavManager
 
 @* @attribute [Authorize] *@
 @layout MainLayout
@@ -100,27 +101,9 @@
         // }
     }
 
-    private async Task EditCollection(Guid bookId)
+    private void EditCollection(Guid collectionId)
     {
-        // var parameters = new DialogParameters();
-        // parameters.Add("BookId", bookId);
-
-        // var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
-        // var dialog = DialogService.Show<BookDialog>("Edit book", parameters, options);
-        // var result = await dialog.Result;
-
-        // if (result.Canceled)
-        //     return;
-
-        // var model = ((BookDialog)dialog.Dialog).Model;
-        // var updateModel = new UpdateModel()
-        // {
-        //     Description = model.Description,
-        //     Title = model.Title
-        // };
-
-        // await BookService.EditBook(bookId, updateModel);
-        // await ReloadData();
+        NavManager.NavigateTo($"/update-collection?collectionId={collectionId}");
     }
 
     private async Task DeleteCollection(Guid id)
@@ -132,7 +115,7 @@
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
 
-        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete book", parameters, options);
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete collection", parameters, options);
         var result = await dialog.Result;
 
         if (result.Canceled)

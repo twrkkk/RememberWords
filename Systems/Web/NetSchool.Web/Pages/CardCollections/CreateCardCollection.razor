@@ -1,0 +1,128 @@
+﻿@page "/create-collection"
+@using NetSchool.Web.Components
+@using Microsoft.AspNetCore.Authorization
+@using NetSchool.Web.Entities.CardCollections
+@using NetSchool.Web.Services.CardCollections
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject ICardCollectionsService cardService
+@inject NavigationManager NavManager
+
+@* @attribute [Authorize] *@
+@layout MainLayout
+
+<PageTitle>Create card collection</PageTitle>
+<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SaveCollection">Save</MudButton>
+
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudPaper>
+                <MudTextField Label="Collection name" @bind-Value="collection.Name"
+                              For="@(() => collection.Name)"
+                              Required="true"
+                              RequiredError="Collection name is required!"
+                              MaxLength="100">
+                </MudTextField>
+                @foreach (var (component, index) in collection.Cards.Select((c, i) => (c, i)))
+                {
+                    <MudCard>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="10">
+                                    <MudTextField Value="@component.Front" Label="Term" Variant="Variant.Filled" Style="width: 100%" />
+                                    <MudTextField Value="@component.Reverse" Label="Definition" Variant="Variant.Filled" Style="width: 100%" />
+                                </MudItem>
+                                <MudItem xs="2">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>EditCard(index))">Edit</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>DeleteCard(index))">Delete</MudButton>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                    @if (index != collection.Cards.Count - 1)
+                    {
+                        <div style="height: 20px;"></div>
+                    }
+                }
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCard">Add card</MudButton>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+@code {
+    private CreateModel collection;
+    private string searchString = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        collection = new CreateModel();
+        collection.Cards = new List<CreateCardModel>();
+    }
+
+    private async Task AddCard()
+    {
+        var parameters = new DialogParameters { };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<CardDialog>("Add card", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        var cardModel = ((CardDialog)dialog.Dialog).Model;
+        collection.Cards.Add(new CreateCardModel { Front = cardModel.Front, Reverse = cardModel.Reverse });
+    }
+
+    private async Task EditCard(int index)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Model", new CreateCardModel { Front = collection.Cards[index].Front, Reverse = collection.Cards[index].Reverse });
+
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<CardDialog>("Edit card", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        var cardModel = ((CardDialog)dialog.Dialog).Model;
+        collection.Cards[index] = new CreateCardModel { Front = cardModel.Front, Reverse = cardModel.Reverse };
+    }
+
+    private async Task DeleteCard(int index)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this card? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete collection", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        collection.Cards.RemoveAt(index);
+    }
+
+    private async Task SaveCollection()
+    {
+        try
+        {
+            collection.UserId = new Guid("978b6e15-7734-4393-974e-25066fceddbb");
+            await cardService.Create(collection);
+
+            NavManager.NavigateTo("/collections");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

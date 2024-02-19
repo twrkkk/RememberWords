@@ -12,7 +12,6 @@ public class CreateModel
     public Guid UserId { get; set; }
     public string Name { get; set; }
     public IEnumerable<CreateCardModel> Cards { get; set; }
-    public DateTime? CreationTime { get; set; }
 }
 
 public class CreateModelProfile : Profile
@@ -22,7 +21,6 @@ public class CreateModelProfile : Profile
         CreateMap<CreateModel, CardCollection>()
             .BeforeMap<CardCollectionActions>()
             .ForMember(dest => dest.User, opt => opt.Ignore())
-            .ForMember(dest => dest.TimeExpiration, opt => opt.MapFrom(src => src.CreationTime))
             ;
     }
 

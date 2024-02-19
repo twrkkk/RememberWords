@@ -3,5 +3,5 @@
 public class UpdateModel
 {
     public string Name { get; set; }
-    public IEnumerable<CardModel> Cards { get; set; }
+    public IList<CardModel> Cards { get; set; }
 }

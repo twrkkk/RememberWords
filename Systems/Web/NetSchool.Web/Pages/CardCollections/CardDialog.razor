@@ -1,0 +1,48 @@
+﻿@using NetSchool.Web.Entities.CardCollections
+@inherits MudComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="Term" @bind-Value="Model.Front"
+                                  For="@(() => Model.Front)"
+                                  Required="true"
+                                  RequiredError="Term is required!"
+                                  MaxLength="200">
+                    </MudTextField>
+                    <MudTextField Label="Definition" @bind-Value="Model.Reverse"
+                                  For="@(() => Model.Reverse)"
+                                  Required="true"
+                                  RequiredError="Definition is required!"
+                                  MaxLength="400">
+                    </MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public CardModel Model { get; set; } = new();
+
+    private MudForm form = default!;
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}
