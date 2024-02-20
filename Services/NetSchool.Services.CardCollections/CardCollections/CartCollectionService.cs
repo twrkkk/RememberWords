@@ -100,7 +100,7 @@ public class CartCollectionService : ICartCollectionService
         if (collection == null)
             throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
 
-        foreach (var cardToUpdate in model.Cards)
+        foreach (var cardToUpdate in model.UpdatedCards)
         {
             var card = collection.Cards.FirstOrDefault(x => x.Uid == cardToUpdate.Id);
             if (card != null) // update exist card
@@ -113,7 +113,16 @@ public class CartCollectionService : ICartCollectionService
                 var newCard = _mapper.Map<Card>(cardToUpdate);
                 collection.Cards.Add(newCard);
             }
+        }
 
+        foreach (var deleteCardId in model.DeletedCardsId)
+        {
+            var card = collection.Cards.FirstOrDefault(x => x.Uid == deleteCardId);
+
+            if(card != null)
+            {
+                collection.Cards.Remove(card);
+            }
         }
 
         collection.Name = model.Name;

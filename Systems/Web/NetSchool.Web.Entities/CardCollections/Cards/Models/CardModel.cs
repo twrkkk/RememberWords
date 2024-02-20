@@ -9,7 +9,6 @@ public class CardModel
     public override bool Equals(object obj)
     {
         return (obj is CardModel card) &&
-            card.Front == Front &&
-            card.Reverse == Reverse;
+            card.Id == Id;
     }
 }

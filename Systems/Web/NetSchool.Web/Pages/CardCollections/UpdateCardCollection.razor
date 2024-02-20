@@ -1,4 +1,5 @@
-﻿@page "/update-collection"
+﻿@page "/create-collection"
+@page "/update-collection"
 @using NetSchool.Web.Components
 @using Microsoft.AspNetCore.Authorization
 @using NetSchool.Web.Entities.CardCollections
@@ -53,6 +54,8 @@
 
 
 @code {
+    const string CreatePath = "create-collection";
+    const string UpdatePath = "update-collection";
     private CardCollectionModel collection;
     private UpdateModel updateModel;
     private string searchString = string.Empty;
@@ -60,16 +63,18 @@
 
     protected override void OnInitialized()
     {
+        var path = NavManager.ToBaseRelativePath(NavManager.Uri);
         collection = new CardCollectionModel();
         collection.Cards = new List<CardModel>();
 
         updateModel = new UpdateModel();
-        updateModel.Cards = new List<CardModel>();
+        updateModel.UpdatedCards = new List<CardModel>();
+        updateModel.DeletedCardsId = new List<Guid>();
     }
 
     protected override async Task OnInitializedAsync()
     {
-        if (collectionId == Guid.Empty)
+        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
             return;
 
         var collectionModel = await cardService.Get(collectionId);
@@ -94,10 +99,16 @@
             return;
 
         var cardModel = ((CardDialog)dialog.Dialog).Model;
-        var newCard = new CardModel { Id = Guid.NewGuid(), Front = cardModel.Front, Reverse = cardModel.Reverse };
+        cardModel.Id = Guid.NewGuid();
 
-        collection.Cards.Add(newCard);
-        updateModel.Cards.Add(newCard);
+        collection.Cards.Add(cardModel);
+
+        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
+            return;
+
+        //update endpoint
+
+        updateModel.UpdatedCards.Add(cardModel);
     }
 
     private async Task EditCard(int index)
@@ -116,12 +127,17 @@
 
         collection.Cards[index] = cardModel;
 
-        var existCard = updateModel.Cards.FirstOrDefault(x => x.Id == cardModel.Id);
-        if (existCard == null)
+        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
+            return;
+
+        //update endpoint
+
+        var existCard = updateModel.UpdatedCards.FirstOrDefault(x => x.Id == cardModel.Id);
+        if (existCard == null) // changing an existing card
         {
-            updateModel.Cards.Add(cardModel);
+            updateModel.UpdatedCards.Add(cardModel);
         }
-        else
+        else // changing the created card
         {
             existCard.Front = cardModel.Front;
             existCard.Reverse = cardModel.Reverse;
@@ -143,10 +159,22 @@
         if (result.Canceled)
             return;
 
-        var cardToDelete = collection.Cards[index];
-
-        updateModel.Cards.Remove(cardToDelete);
+        var DeletedCardId = collection.Cards[index].Id;
         collection.Cards.RemoveAt(index);
+
+        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
+            return;
+
+        //update endpoint
+
+        var cardToDelete = updateModel.UpdatedCards.FirstOrDefault(x => x.Id == DeletedCardId);
+
+        if (cardToDelete != null)
+        {
+            updateModel.UpdatedCards.Remove(cardToDelete);
+        }
+
+        updateModel.DeletedCardsId.Add(DeletedCardId);
     }
 
     private async Task SaveCollection()
@@ -154,7 +182,21 @@
         try
         {
             updateModel.Name = collection.Name;
-            await cardService.Update(collectionId, updateModel);
+            if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
+            {
+                var createdCollection = new CreateModel
+                    {
+                        Name = collection.Name,
+                        UserId = new Guid("978b6e15-7734-4393-974e-25066fceddbb"),
+                        Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList()
+                    };
+
+                await cardService.Create(createdCollection);
+            }
+            else
+            {
+                await cardService.Update(collectionId, updateModel);
+            }
 
             NavManager.NavigateTo("/collections");
         }
