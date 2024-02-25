@@ -13,7 +13,7 @@
     <MudItem xs="7" sm="4">
         <MudPaper Class="pa-4">
             <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-                
+
                 <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign In</MudText>
 
                 <MudAlert Severity="Severity.Error" Class="@(ShowErrors ? "mb-3 d-block" : "d-none")">
@@ -27,23 +27,23 @@
                               Label="Nickname"
                               Required="true"
                               RequiredError="Nickname is required!"
-                              HelperText="Input your nickname"/>
+                              HelperText="Input your nickname" />
                 <MudTextField T="string"
-                                @bind-Value="model.Email" For="@(() => model.Email)"
-                                Label="Email" 
-                                Required="true" 
-                                RequiredError="Email is required!"
-                                HelperText="Input your username"
-                                Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"/>
+                              @bind-Value="model.Email" For="@(() => model.Email)"
+                              Label="Email"
+                              Required="true"
+                              RequiredError="Email is required!"
+                              HelperText="Input your username"
+                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
                 <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
-                                Label="Password" 
-                                HelperText="Input your password"
-                                InputType="@PasswordInput"
-                                Adornment="Adornment.End"
-                                AdornmentIcon="@PasswordInputIcon"
-                                Required="true"
-                                RequiredError="Password is required!"
-                                OnAdornmentClick="TogglePasswordVisibility" />
+                              Label="Password"
+                              HelperText="Input your password"
+                              InputType="@PasswordInput"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@PasswordInputIcon"
+                              Required="true"
+                              RequiredError="Password is required!"
+                              OnAdornmentClick="TogglePasswordVisibility" />
 
                 <div Class="d-flex justify-space-between align-center">
                     <MudLink Href="/login">Have an account?</MudLink>
@@ -95,6 +95,8 @@
         Error = "";
         ErrorDetail = "";
 
-       await RegistrationService.Create(model);
+        await RegistrationService.Create(model);
+
+        NavigationManager.NavigateTo("/EmailConfirmNotification");
     }
 }

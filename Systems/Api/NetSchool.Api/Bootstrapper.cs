@@ -4,6 +4,8 @@ using NetSchool.Services.CardCollections;
 using NetSchool.Context.Seeder;
 using NetSchool.Services.UserAccount;
 using NetSchool.Api.Settings;
+using NetSchool.Services.RabbitMq;
+using NetSchool.Services.Actions;
 
 namespace NetSchool.Api;
 
@@ -20,6 +22,8 @@ public static class Bootstrapper
             .AddDbSeeder()
             .AddUserAccountService()
             .AddApiSpecialSettings()
+            .AddRabbitMq()
+            .AddActions()
             ;
 
         return services;

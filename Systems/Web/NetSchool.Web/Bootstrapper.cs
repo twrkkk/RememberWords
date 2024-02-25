@@ -6,6 +6,7 @@ using NetSchool.Web.Providers;
 using NetSchool.Web.Pages.Auth.Services;
 using Microsoft.AspNetCore.Authorization;
 using NetSchool.Web.Pages.Registration.Services;
+using NetSchool.Web.Pages.Account.Services;
 
 namespace NetSchool.Web;
 
@@ -18,6 +19,7 @@ public static class Bootstrapper
             .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
             .AddScoped<IAuthService, AuthService>()
             .AddScoped<IRegistrationService, RegistrationService>()
+            .AddScoped<IAccountService, AccountService>()
         ;
 
         return services;

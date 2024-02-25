@@ -3,11 +3,10 @@
 using AutoMapper;
 using NetSchool.Services.UserAccount;
 using Microsoft.AspNetCore.Mvc;
-using Asp.Versioning;
-using NetSchool.Common.Exceptions;
+using NetSchool.Services.UserAccount.Models;
 
 [ApiController]
-[Asp.Versioning.ApiVersion("1.0")]
+[ApiVersion("1.0")]
 [ApiExplorerSettings(GroupName = "Accounts")]
 [Route("v{version:apiVersion}/[controller]")]
 public class AccountsController : ControllerBase
@@ -28,6 +27,14 @@ public class AccountsController : ControllerBase
     {
         var user = await userAccountService.Create(request);
         return user;
+    }
+
+    [HttpPost("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail([FromBody] EmailConfirmModel model)
+    {
+        await userAccountService.ConfirmEmail(model);
+
+        return Ok();
     }
 }
 

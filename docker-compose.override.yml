@@ -14,15 +14,15 @@ services:
       - ~/.docker-conf/postgresql/data/:/var/lib/postgresql/data
       - /var/lib/postgresql/data
 
-  # memorizing_rabbitmq:
-  #  ports:
-  #    - "5672:5672"
-  #    - "5673:5673"
-  #    - "15672:15672" 
-  #  networks:
-  #    - shared_netschool_net
-  #  volumes:      
-  #    - /var/lib/rabbitmq
+  memorizing_rabbitmq:
+   ports:
+     - "5672:5672"
+     - "5673:5673"
+     - "15672:15672" 
+   networks:
+     - shared_netschool_net
+   volumes:      
+     - /var/lib/rabbitmq
     
 
   memorizing_api:
@@ -35,13 +35,13 @@ services:
     env_file:
       - env.api
 
-  # dsrnetschool_worker_1:
-  #  networks:
-  #    - shared_netschool_net
-  #  ports:
-  #    - "10001:80"
-  #  env_file:
-  #    - env.worker
+  dsrnetschool_worker_1:
+   networks:
+     - shared_netschool_net
+   ports:
+     - "10001:80"
+   env_file:
+     - env.worker
 
   # dsrnetschool_worker_2:
   #  networks:

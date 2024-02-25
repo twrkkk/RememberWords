@@ -65,7 +65,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_docker", "_docker", "{1B3A
 		docker-compose.yml = docker-compose.yml
 		env.api = env.api
 		env.identity = env.identity
+		env.worker = env.worker
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.RabbitMq", "Services\NetSchool.Services.RabbitMq\NetSchool.Services.RabbitMq.csproj", "{2481B237-8F9F-4BD0-8E0D-45D0063CB61D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Actions", "Services\NetSchool.Services.Actions\NetSchool.Services.Actions.csproj", "{F33027A8-3A21-4172-A0C0-0F458C520063}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Worker", "Worker", "{3A6B6AD5-F1F6-4B15-AF1B-E6844089B92C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Worker", "Systems\Worker\NetSchool.Worker\NetSchool.Worker.csproj", "{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.EmailSender", "Services\NetSchool.Services.EmailSender\NetSchool.Services.EmailSender.csproj", "{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +156,22 @@ Global
 		{3DC386BB-027F-4718-9712-12A105775BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC386BB-027F-4718-9712-12A105775BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC386BB-027F-4718-9712-12A105775BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2481B237-8F9F-4BD0-8E0D-45D0063CB61D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2481B237-8F9F-4BD0-8E0D-45D0063CB61D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2481B237-8F9F-4BD0-8E0D-45D0063CB61D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2481B237-8F9F-4BD0-8E0D-45D0063CB61D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33027A8-3A21-4172-A0C0-0F458C520063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33027A8-3A21-4172-A0C0-0F458C520063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33027A8-3A21-4172-A0C0-0F458C520063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33027A8-3A21-4172-A0C0-0F458C520063}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +201,11 @@ Global
 		{7E53B0C0-A1D1-4AC1-9A20-3F9F859C1B07} = {B033D305-6F98-4E35-9BFE-E7CF99ADF96D}
 		{F1B3919D-990C-46DC-8982-E393A7C40E83} = {882F0650-D226-4C80-B15F-5D99298BDFC6}
 		{3DC386BB-027F-4718-9712-12A105775BF5} = {F1B3919D-990C-46DC-8982-E393A7C40E83}
+		{2481B237-8F9F-4BD0-8E0D-45D0063CB61D} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{F33027A8-3A21-4172-A0C0-0F458C520063} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{3A6B6AD5-F1F6-4B15-AF1B-E6844089B92C} = {2ADFD4DD-C0D0-49E1-8079-B65867416AC8}
+		{F8A7C0A9-2D6A-44FA-85C0-48209EC09BBB} = {3A6B6AD5-F1F6-4B15-AF1B-E6844089B92C}
+		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}

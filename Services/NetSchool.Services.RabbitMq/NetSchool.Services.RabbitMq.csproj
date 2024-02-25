@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Shared\NetSchool.Common\NetSchool.Common.csproj" />
-    <ProjectReference Include="..\NetSchool.Services.Actions\NetSchool.Services.Actions.csproj" />
-    <ProjectReference Include="..\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj" />
   </ItemGroup>
 
 </Project>

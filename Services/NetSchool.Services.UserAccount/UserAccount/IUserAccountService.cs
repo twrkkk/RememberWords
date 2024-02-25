@@ -1,4 +1,7 @@
-﻿namespace NetSchool.Services.UserAccount;
+﻿using NetSchool.Context.Entities;
+using NetSchool.Services.UserAccount.Models;
+
+namespace NetSchool.Services.UserAccount;
 
 public interface IUserAccountService
 {
@@ -10,7 +13,8 @@ public interface IUserAccountService
     /// <param name="model"></param>
     /// <returns></returns>
     Task<UserAccountModel> Create(RegisterUserAccountModel model);
-
+    Task SendEmailConfirmation(User user);
+    Task ConfirmEmail(EmailConfirmModel model);
 
 
 

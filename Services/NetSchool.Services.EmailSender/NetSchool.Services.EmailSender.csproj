@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Shared\NetSchool.Common\NetSchool.Common.csproj" />
-    <ProjectReference Include="..\NetSchool.Services.Actions\NetSchool.Services.Actions.csproj" />
-    <ProjectReference Include="..\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj" />
   </ItemGroup>
 
 </Project>

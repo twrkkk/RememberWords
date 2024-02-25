@@ -5,8 +5,8 @@ services:
   memorizing_postgresql:
     image: postgres:14.1
     
-  # netschool_rabbitmq:
-  #   image: rabbitmq:management
+  memorizing_rabbitmq:
+    image: rabbitmq:management
             
   memorizing_api:
     image: ${DOCKER_REGISTRY-}memorizingapi
@@ -15,7 +15,7 @@ services:
       dockerfile: Systems/Api/NetSchool.Api/Dockerfile
     depends_on:
       - memorizing_postgresql
-      # - memorizing_rabbitmq
+      - memorizing_rabbitmq
 
   memorizing_identity:
     image: ${DOCKER_REGISTRY-}memorizingidentity
@@ -26,15 +26,15 @@ services:
       - memorizing_postgresql
       - memorizing_api
 
-  # dsrnetschool_worker_1:
-  #  image: ${DOCKER_REGISTRY-}netschoolworker
-  #  build:
-  #    context: .
-  #    dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
-  #  depends_on:
-  #    - netschool_postgresql
-  #    - netschool_rabbitmq
-  #    - netschool_api
+  dsrnetschool_worker_1:
+   image: ${DOCKER_REGISTRY-}netschoolworker
+   build:
+     context: .
+     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
+   depends_on:
+     - memorizing_postgresql
+     - memorizing_rabbitmq
+     - memorizing_api
 
   # dsrnetschool_worker_2:
   #  image: ${DOCKER_REGISTRY-}netschoolworker

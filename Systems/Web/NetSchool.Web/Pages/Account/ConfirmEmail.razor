@@ -1,0 +1,22 @@
+﻿@page "/ConfirmEmail"
+@using NetSchool.Web.Pages.Account.Services
+@inject IAccountService AccountService
+@inject NavigationManager NavManager
+@layout SimpleLayout
+
+@code {
+    [SupplyParameterFromQuery] public string userEmail { get; set; }
+    [SupplyParameterFromQuery] public string Code { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (userEmail == null || Code == null)
+            return;
+
+        await AccountService.ConfirmEmail(userEmail, Code);
+
+        NavManager.NavigateTo("/ConfirmEmailResult");
+    }
+}
