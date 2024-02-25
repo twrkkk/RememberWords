@@ -1,0 +1,100 @@
+﻿@page "/registration"
+@using System.ComponentModel.DataAnnotations
+@using NetSchool.Web.Pages.Auth.Models
+@using NetSchool.Web.Pages.Auth.Services
+@using NetSchool.Web.Pages.Registration.Models
+@using NetSchool.Web.Pages.Registration.Services
+@layout SimpleLayout
+
+@inject NavigationManager NavigationManager
+@inject IRegistrationService RegistrationService
+
+<MudGrid Justify="Justify.Center" Class="pa-10">
+    <MudItem xs="7" sm="4">
+        <MudPaper Class="pa-4">
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                
+                <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign In</MudText>
+
+                <MudAlert Severity="Severity.Error" Class="@(ShowErrors ? "mb-3 d-block" : "d-none")">
+                    @Error
+                    <br />
+                    @ErrorDetail
+                </MudAlert>
+
+                <MudTextField T="string"
+                              @bind-Value="model.UserName" For="@(() => model.UserName)"
+                              Label="Nickname"
+                              Required="true"
+                              RequiredError="Nickname is required!"
+                              HelperText="Input your nickname"/>
+                <MudTextField T="string"
+                                @bind-Value="model.Email" For="@(() => model.Email)"
+                                Label="Email" 
+                                Required="true" 
+                                RequiredError="Email is required!"
+                                HelperText="Input your username"
+                                Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"/>
+                <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
+                                Label="Password" 
+                                HelperText="Input your password"
+                                InputType="@PasswordInput"
+                                Adornment="Adornment.End"
+                                AdornmentIcon="@PasswordInputIcon"
+                                Required="true"
+                                RequiredError="Password is required!"
+                                OnAdornmentClick="TogglePasswordVisibility" />
+
+                <div Class="d-flex justify-space-between align-center">
+                    <MudLink Href="/login">Have an account?</MudLink>
+                </div>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           ButtonType="ButtonType.Submit">Register</MudButton>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    bool success;
+    MudForm form;
+
+    private RegisterUserAccountModel model = new RegisterUserAccountModel();
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private bool ShowErrors;
+    private string Error;
+    private string ErrorDetail;
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+
+    private async Task OnValidSubmit()
+    {
+        ShowErrors = false;
+        Error = "";
+        ErrorDetail = "";
+
+       await RegistrationService.Create(model);
+    }
+}

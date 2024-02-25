@@ -1,52 +1,57 @@
 ﻿@page "/create-collection"
 @page "/update-collection"
+@using Microsoft.AspNetCore.Components.Authorization
 @using NetSchool.Web.Components
 @using Microsoft.AspNetCore.Authorization
 @using NetSchool.Web.Entities.CardCollections
 @using NetSchool.Web.Services.CardCollections
+@using System.Security.Claims
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject ICardCollectionsService cardService
 @inject NavigationManager NavManager
+@inject AuthenticationStateProvider authProvider
 
-@* @attribute [Authorize] *@
+@attribute [Authorize]
 @layout MainLayout
 
 <PageTitle>Create card collection</PageTitle>
-<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SaveCollection">Save</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SaveCollection" Disabled="@(!collection.Cards.Any())">Save</MudButton>
 
 <MudContainer>
     <MudGrid>
         <MudItem xs="12">
             <MudPaper>
-                <MudTextField Label="Collection name" @bind-Value="collection.Name"
-                              For="@(() => collection.Name)"
-                              Required="true"
-                              RequiredError="Collection name is required!"
-                              MaxLength="100">
-                </MudTextField>
-                @foreach (var (component, index) in collection.Cards.Select((c, i) => (c, i)))
-                {
-                    <MudCard>
-                        <MudCardContent>
-                            <MudGrid>
-                                <MudItem xs="10">
-                                    <MudTextField Value="@component.Front" Label="Term" Variant="Variant.Filled" Style="width: 100%" />
-                                    <MudTextField Value="@component.Reverse" Label="Definition" Variant="Variant.Filled" Style="width: 100%" />
-                                </MudItem>
-                                <MudItem xs="2">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>EditCard(index))">Edit</MudButton>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>DeleteCard(index))">Delete</MudButton>
-                                </MudItem>
-                            </MudGrid>
-                        </MudCardContent>
-                    </MudCard>
-                    @if (index != collection.Cards.Count - 1)
+                <MudForm Model="collection" @ref="form">
+                    <MudTextField Label="Collection name" @bind-Value="collection.Name"
+                                  For="@(() => collection.Name)"
+                                  Required="true"
+                                  RequiredError="Collection name is required!"
+                                  MaxLength="100">
+                    </MudTextField>
+                    @foreach (var (component, index) in collection.Cards.Select((c, i) => (c, i)))
                     {
-                        <div style="height: 20px;"></div>
+                        <MudCard>
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="10">
+                                        <MudTextField Value="@component.Front" Label="Term" Variant="Variant.Filled" Style="width: 100%" />
+                                        <MudTextField Value="@component.Reverse" Label="Definition" Variant="Variant.Filled" Style="width: 100%" />
+                                    </MudItem>
+                                    <MudItem xs="2">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>EditCard(index))">Edit</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>DeleteCard(index))">Delete</MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                        </MudCard>
+                        @if (index != collection.Cards.Count - 1)
+                        {
+                            <div style="height: 20px;"></div>
+                        }
                     }
-                }
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCard">Add card</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCard">Add card</MudButton>
+                </MudForm>
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -55,10 +60,10 @@
 
 @code {
     const string CreatePath = "create-collection";
-    const string UpdatePath = "update-collection";
     private CardCollectionModel collection;
     private UpdateModel updateModel;
     private string searchString = string.Empty;
+    private MudForm form = default!;
     [SupplyParameterFromQuery] public Guid collectionId { get; set; }
 
     protected override void OnInitialized()
@@ -181,13 +186,19 @@
     {
         try
         {
+            await form.Validate();
+            if (!form.IsValid)
+                return;
+
             updateModel.Name = collection.Name;
             if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
             {
+                var authState = await authProvider.GetAuthenticationStateAsync();
+                var userId = authState.User.Claims.FirstOrDefault(x => x.Type.ToLower() == "sub").Value;
                 var createdCollection = new CreateModel
                     {
                         Name = collection.Name,
-                        UserId = new Guid("978b6e15-7734-4393-974e-25066fceddbb"),
+                        UserId = new Guid(userId),//new Guid("b26fd4c9-3638-4a8a-9f67-4051f11c4278"),
                         Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList()
                     };
 

@@ -45,6 +45,9 @@ namespace NetSchool.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+
+            //var result = await _cartCollectionService.Get(id);
+            //return Ok(result);
         }
 
         [HttpPost("")]

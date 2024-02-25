@@ -4,6 +4,7 @@ using AutoMapper;
 using NetSchool.Services.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 using Asp.Versioning;
+using NetSchool.Common.Exceptions;
 
 [ApiController]
 [Asp.Versioning.ApiVersion("1.0")]
@@ -23,7 +24,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("")]
-    public async Task<UserAccountModel> Register([FromQuery] RegisterUserAccountModel request)
+    public async Task<UserAccountModel> Register([FromBody] RegisterUserAccountModel request)
     {
         var user = await userAccountService.Create(request);
         return user;

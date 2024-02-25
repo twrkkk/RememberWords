@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.1" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+	</PropertyGroup>
+
+</Project>

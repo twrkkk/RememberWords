@@ -8,7 +8,7 @@
 @inject IDialogService DialogService
 @inject NavigationManager NavManager
 
-@* @attribute [Authorize] *@
+@attribute [Authorize]
 @layout MainLayout
 
 <PageTitle>Card Collections</PageTitle>
@@ -71,34 +71,9 @@
         }
     }
 
-    private async Task AddCollection()
+    private void AddCollection()
     {
-        // var parameters = new DialogParameters { };
-        // var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
-
-        // var dialog = await DialogService.ShowAsync<CardCollectionsDialog>("Add new collection", parameters, options);
-        // var result = await dialog.Result;
-
-        // if (result.Canceled)
-        //     return;
-
-        // try
-        // {
-        //     var collectionModel = ((CardCollectionsDialog)dialog.Dialog).Model;
-        //     var createModel = new CreateModel()
-        //         {
-        //             UserId = collectionModel.UserId,
-        //             Name = collectionModel.Name,
-        //             Cards = collectionModel.Cards
-        //         };
-
-        //     await CardCollectionsService.Create(createModel);
-        //     await ReloadData();
-        // }
-        // catch (Exception ex)
-        // {
-        //     Snackbar.Add(ex.Message, Severity.Error);
-        // }
+        NavManager.NavigateTo($"/create-collection");
     }
 
     private void EditCollection(Guid collectionId)

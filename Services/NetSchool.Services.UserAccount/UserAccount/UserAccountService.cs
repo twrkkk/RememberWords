@@ -44,7 +44,7 @@ public class UserAccountService : IUserAccountService
             Status = UserStatus.Active,
             UserName = model.UserName,
             Email = model.Email,
-            EmailConfirmed = true, // Так как это учебный проект, то сразу считаем, что почта подтверждена. В реальном проекте, скорее всего, надо будет ее подтвердить через ссылку в письме
+            EmailConfirmed = true,
             PhoneNumber = null,
             PhoneNumberConfirmed = false,
             RegistrationDate = DateTime.UtcNow,

@@ -74,7 +74,7 @@ public static class DbSeeder
 
         await userAccountService.Create(new RegisterUserAccountModel()
         {
-            UserName = settings.Init.Administrator.Name,
+            UserName = settings.Init.Administrator.Email,
             Email = settings.Init.Administrator.Email,
             Password = settings.Init.Administrator.Password,
         });
