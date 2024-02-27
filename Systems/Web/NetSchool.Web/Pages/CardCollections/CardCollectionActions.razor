@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using NetSchool.Web.Entities.CardCollections
 @using NetSchool.Web.Services.CardCollections
+@using NetSchool.Web.Services.CardCollectionActions
 @using System.Security.Claims
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -16,20 +17,20 @@
 @layout MainLayout
 
 <PageTitle>Create card collection</PageTitle>
-<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SaveCollection" Disabled="@(!collection.Cards.Any())">Save</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SaveCollection" Disabled="@(!cardActions.collection.Cards.Any())">Save</MudButton>
 
 <MudContainer>
     <MudGrid>
         <MudItem xs="12">
             <MudPaper>
-                <MudForm Model="collection" @ref="form">
-                    <MudTextField Label="Collection name" @bind-Value="collection.Name"
-                                  For="@(() => collection.Name)"
+                <MudForm Model="cardActions.collection" @ref="form">
+                    <MudTextField Label="Collection name" @bind-Value="cardActions.collection.Name"
+                                  For="@(() => cardActions.collection.Name)"
                                   Required="true"
                                   RequiredError="Collection name is required!"
                                   MaxLength="100">
                     </MudTextField>
-                    @foreach (var (component, index) in collection.Cards.Select((c, i) => (c, i)))
+                    @foreach (var (component, index) in cardActions.collection.Cards.Select((c, i) => (c, i)))
                     {
                         <MudCard>
                             <MudCardContent>
@@ -39,13 +40,13 @@
                                         <MudTextField Value="@component.Reverse" Label="Definition" Variant="Variant.Filled" Style="width: 100%" />
                                     </MudItem>
                                     <MudItem xs="2">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>EditCard(index))">Edit</MudButton>
-                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>DeleteCard(index))">Delete</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>EditCard(component))">Edit</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(()=>DeleteCard(component.Id))">Delete</MudButton>
                                     </MudItem>
                                 </MudGrid>
                             </MudCardContent>
                         </MudCard>
-                        @if (index != collection.Cards.Count - 1)
+                        @if (index != cardActions.collection.Cards.Count - 1)
                         {
                             <div style="height: 20px;"></div>
                         }
@@ -60,36 +61,31 @@
 
 @code {
     const string CreatePath = "create-collection";
-    private CardCollectionModel collection;
-    private UpdateModel updateModel;
+    private CardCollectionActions cardActions;
     private string searchString = string.Empty;
     private MudForm form = default!;
     [SupplyParameterFromQuery] public Guid collectionId { get; set; }
 
-    protected override void OnInitialized()
-    {
-        var path = NavManager.ToBaseRelativePath(NavManager.Uri);
-        collection = new CardCollectionModel();
-        collection.Cards = new List<CardModel>();
-
-        updateModel = new UpdateModel();
-        updateModel.UpdatedCards = new List<CardModel>();
-        updateModel.DeletedCardsId = new List<Guid>();
-    }
-
     protected override async Task OnInitializedAsync()
     {
         if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
+        {
+            cardActions = new CreateCardCollectionActions(authProvider, cardService);
             return;
+        }
+        else
+        {
+            cardActions = new UpdateCardCollectionActions(cardService);
+        }
 
         var collectionModel = await cardService.Get(collectionId);
 
         if (collectionModel == null)
             return;
 
-        collection.Name = collectionModel.Name;
-        collection.UserId = collectionModel.UserId;
-        collection.Cards = collectionModel.Cards;
+        cardActions.collection.Name = collectionModel.Name;
+        cardActions.collection.UserId = collectionModel.UserId;
+        cardActions.collection.Cards = collectionModel.Cards;
     }
 
     private async Task AddCard()
@@ -106,20 +102,13 @@
         var cardModel = ((CardDialog)dialog.Dialog).Model;
         cardModel.Id = Guid.NewGuid();
 
-        collection.Cards.Add(cardModel);
-
-        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
-            return;
-
-        //update endpoint
-
-        updateModel.UpdatedCards.Add(cardModel);
+        cardActions.AddCard(cardModel);
     }
 
-    private async Task EditCard(int index)
+    private async Task EditCard(CardModel model)
     {
         var parameters = new DialogParameters();
-        parameters.Add("Model", new CardModel { Id = collection.Cards[index].Id, Front = collection.Cards[index].Front, Reverse = collection.Cards[index].Reverse });
+        parameters.Add("Model", new CardModel { Id = model.Id, Front = model.Front, Reverse = model.Reverse });
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
         var dialog = DialogService.Show<CardDialog>("Edit card", parameters, options);
@@ -130,26 +119,10 @@
 
         var cardModel = ((CardDialog)dialog.Dialog).Model;
 
-        collection.Cards[index] = cardModel;
-
-        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
-            return;
-
-        //update endpoint
-
-        var existCard = updateModel.UpdatedCards.FirstOrDefault(x => x.Id == cardModel.Id);
-        if (existCard == null) // changing an existing card
-        {
-            updateModel.UpdatedCards.Add(cardModel);
-        }
-        else // changing the created card
-        {
-            existCard.Front = cardModel.Front;
-            existCard.Reverse = cardModel.Reverse;
-        }
+        cardActions.EditCard(cardModel);
     }
 
-    private async Task DeleteCard(int index)
+    private async Task DeleteCard(Guid cardId)
     {
         var parameters = new DialogParameters();
         parameters.Add("ContentText", "Do you really want to delete this card? This process cannot be undone.");
@@ -164,22 +137,7 @@
         if (result.Canceled)
             return;
 
-        var DeletedCardId = collection.Cards[index].Id;
-        collection.Cards.RemoveAt(index);
-
-        if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
-            return;
-
-        //update endpoint
-
-        var cardToDelete = updateModel.UpdatedCards.FirstOrDefault(x => x.Id == DeletedCardId);
-
-        if (cardToDelete != null)
-        {
-            updateModel.UpdatedCards.Remove(cardToDelete);
-        }
-
-        updateModel.DeletedCardsId.Add(DeletedCardId);
+        cardActions.DeleteCard(cardId);
     }
 
     private async Task SaveCollection()
@@ -190,24 +148,7 @@
             if (!form.IsValid)
                 return;
 
-            updateModel.Name = collection.Name;
-            if (CreatePath == NavManager.ToBaseRelativePath(NavManager.Uri))
-            {
-                var authState = await authProvider.GetAuthenticationStateAsync();
-                var userId = authState.User.Claims.FirstOrDefault(x => x.Type.ToLower() == "sub").Value;
-                var createdCollection = new CreateModel
-                    {
-                        Name = collection.Name,
-                        UserId = new Guid(userId),//new Guid("b26fd4c9-3638-4a8a-9f67-4051f11c4278"),
-                        Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList()
-                    };
-
-                await cardService.Create(createdCollection);
-            }
-            else
-            {
-                await cardService.Update(collectionId, updateModel);
-            }
+            await cardActions.SaveChanges(collectionId);
 
             NavManager.NavigateTo("/collections");
         }

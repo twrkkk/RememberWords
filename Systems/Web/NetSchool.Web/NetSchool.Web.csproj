@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\NetSchool.Web.Entities\NetSchool.Web.Entities.csproj" />
+		<ProjectReference Include="..\NetSchool.Web.Services.CardCollectionActions\NetSchool.Web.Services.CardCollectionActions.csproj" />
 		<ProjectReference Include="..\NetSchool.Web.Services.CardCollections\NetSchool.Web.Services.CardCollections.csproj" />
 		<ProjectReference Include="..\NetSchool.Web.Services.Configuration\NetSchool.Web.Services.Configuration.csproj" />
 	</ItemGroup>
