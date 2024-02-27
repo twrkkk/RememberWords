@@ -15,6 +15,8 @@ public interface IUserAccountService
     Task<UserAccountModel> Create(RegisterUserAccountModel model);
     Task SendEmailConfirmation(User user);
     Task ConfirmEmail(EmailConfirmModel model);
+    Task SendEmailToChangePassword(ResetPasswordModel model);
+    Task ChangePassword(ChangePasswordModel model);
 
 
 

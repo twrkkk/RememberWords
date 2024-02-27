@@ -100,4 +100,41 @@ public class UserAccountService : IUserAccountService
 
         await userManager.ConfirmEmailAsync(user, model.Code);
     }
+
+    public async Task SendEmailToChangePassword(ResetPasswordModel model)
+    {
+        var user = await userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+            throw new EntityNotFoundException($"User (EMAIL = {model.Email}) not found.");
+
+        var code = await userManager.GeneratePasswordResetTokenAsync(user);
+
+        var uriBuilder = new UriBuilder("https", "localhost", 7165, "/change-password");
+        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        query["userEmail"] = user.Email;
+        query["code"] = code;
+        uriBuilder.Query = query.ToString();
+
+        var callbackUrl = uriBuilder.ToString();
+
+        var email = new EmailModel
+        {
+            To = user.Email,
+            Subject = "Memorizing Change Password",
+            Content = string.Format("To reset password on Memorizing, click <a href='{0}'>here</a>", callbackUrl)
+        };
+
+        await action.SendResetPasswordEmail(email);
+    }
+
+    public async Task ChangePassword(ChangePasswordModel model)
+    {
+        var user = await userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+            throw new EntityNotFoundException($"User (EMAIL = {model.Email}) not found.");
+
+        await userManager.ResetPasswordAsync(user, model.Code, model.NewPassword);
+    }
 }

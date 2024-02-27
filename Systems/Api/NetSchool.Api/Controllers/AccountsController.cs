@@ -36,5 +36,21 @@ public class AccountsController : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        await userAccountService.SendEmailToChangePassword(model);
+
+        return Ok();
+    }
+
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+    {
+        await userAccountService.ChangePassword(model);
+
+        return Ok();
+    }
 }
 

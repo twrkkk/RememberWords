@@ -21,12 +21,11 @@
                 </MudAlert>
 
                 <MudTextField T="string"
-                              @bind-Value="model.Email" For="@(() => model.Email)"
-                              Label="Email"
+                              @bind-Value="model.Username" For="@(() => model.Username)"
                               Required="true"
-                              RequiredError="Email is required!"
+                              RequiredError="Username is required!"
                               HelperText="Input your username"
-                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                              />
                 <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
                               Label="Password"
                               HelperText="Input your password"
@@ -61,7 +60,7 @@
 
     private LoginModel model = new LoginModel()
         {
-            Email = "admin@dsrnetschool.com",
+            Username = "admin@dsrnetschool.com",
             Password = "Pass1234"
         };
 

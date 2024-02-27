@@ -15,12 +15,38 @@ namespace NetSchool.Web.Pages.Account.Services
             _httpClient = httpClient;
         }
 
+        public async Task ChangePassword(ChangePasswordModel model)
+        {
+            var requestContent = JsonContent.Create(model);
+            try
+            {
+                var response = await _httpClient.PostAsync("v1/accounts/ChangePassword", requestContent);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task ConfirmEmail(string userEmail, string code)
         {
             var requestContent = JsonContent.Create(new EmailConfirmModel { Email = userEmail, Code = code});
             try
             {
                 var response = await _httpClient.PostAsync("v1/accounts/ConfirmEmail", requestContent);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task SendEmailToChangePassword(string email)
+        {
+            var requestContent = JsonContent.Create(new ResetPasswordModel { Email = email });
+            try
+            {
+                var response = await _httpClient.PostAsync("v1/accounts/ResetPassword", requestContent);
             }
             catch
             {

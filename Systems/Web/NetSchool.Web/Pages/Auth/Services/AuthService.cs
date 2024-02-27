@@ -37,7 +37,7 @@ public class AuthService : IAuthService
             new KeyValuePair<string, string>("grant_type", "password"),
             new KeyValuePair<string, string>("client_id", Settings.ClientId),
             new KeyValuePair<string, string>("client_secret", Settings.ClientSecret),
-            new KeyValuePair<string, string>("username", loginModel.Email!),
+            new KeyValuePair<string, string>("username", loginModel.Username!),
             new KeyValuePair<string, string>("password", loginModel.Password!)
         };
 
@@ -58,7 +58,7 @@ public class AuthService : IAuthService
         await _localStorage.SetItemAsync(LocalStorageAuthTokenKey, loginResult.AccessToken);
         await _localStorage.SetItemAsync(LocalStorageRefreshTokenKey, loginResult.RefreshToken);
 
-        ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Email!);
+        ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Username!);
 
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.AccessToken);
 

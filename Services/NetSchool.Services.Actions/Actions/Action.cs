@@ -17,4 +17,9 @@ public class Action : IAction
     {
         await rabbitMq.PushAsync(QueueNames.EMAIL_CONFIRMATION, model);
     }
+
+    public async Task SendResetPasswordEmail(EmailModel model)
+    {
+        await rabbitMq.PushAsync(QueueNames.RESET_PASSWORD, model);
+    }
 }

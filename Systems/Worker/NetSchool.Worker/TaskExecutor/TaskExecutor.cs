@@ -33,5 +33,14 @@ public class TaskExecutor : ITaskExecutor
 
             logger.Information($"The confirmation was sent::: {data.To}");
         });
+
+        rabbitMq.Subscribe<EmailModel>(QueueNames.RESET_PASSWORD, async data =>
+        {
+            logger.Information($"Start sending email to reset password::: {data.To}");
+
+            await emailSender.SendEmailAsync(data);
+
+            logger.Information($"Email to reset password was sent::: {data.To}");
+        });
     }
 }

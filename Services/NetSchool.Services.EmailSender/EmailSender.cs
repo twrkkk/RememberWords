@@ -22,8 +22,8 @@ namespace NetSchool.Services.EmailSender
         private MimeMessage CreateEmailMessage(EmailModel message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("email", _emailConfiguration.From));
-            emailMessage.To.Add(new MailboxAddress("email", message.To));
+            emailMessage.From.Add(new MailboxAddress(message.Subject, _emailConfiguration.From));
+            emailMessage.To.Add(new MailboxAddress(message.Subject, message.To));
             emailMessage.Subject = message.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = message.Content };
             return emailMessage;
