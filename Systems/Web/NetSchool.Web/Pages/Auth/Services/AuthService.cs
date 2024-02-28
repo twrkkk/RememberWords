@@ -11,21 +11,19 @@ using NetSchool.Web.Providers;
 namespace NetSchool.Web.Pages.Auth.Services;
 
 public class AuthService : IAuthService
-{
-    private const string LocalStorageAuthTokenKey = "authToken";
-    private const string LocalStorageRefreshTokenKey = "refreshToken";
-    
-    private readonly HttpClient _httpClient;
+{    
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private readonly ILocalStorageService _localStorage;
 
-    public AuthService(HttpClient httpClient,
+    public AuthService(
                        AuthenticationStateProvider authenticationStateProvider,
-                       ILocalStorageService localStorage)
+                       ILocalStorageService localStorage,
+                       IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient;
         _authenticationStateProvider = authenticationStateProvider;
         _localStorage = localStorage;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<LoginResult> Login(LoginModel loginModel)
@@ -43,7 +41,9 @@ public class AuthService : IAuthService
 
         var requestContent = new FormUrlEncodedContent(request_body);
 
-        var response = await _httpClient.PostAsync(url, requestContent);
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+
+        var response = await httpClient.PostAsync(url, requestContent);
 
         var content = await response.Content.ReadAsStringAsync();
 
@@ -55,23 +55,24 @@ public class AuthService : IAuthService
             return loginResult;
         }
 
-        await _localStorage.SetItemAsync(LocalStorageAuthTokenKey, loginResult.AccessToken);
-        await _localStorage.SetItemAsync(LocalStorageRefreshTokenKey, loginResult.RefreshToken);
+        await _localStorage.SetItemAsync(Constants.LocalStorageAuthTokenKey, loginResult.AccessToken);
+        await _localStorage.SetItemAsync(Constants.LocalStorageRefreshTokenKey, loginResult.RefreshToken);
 
         ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Username!);
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.AccessToken);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.AccessToken);
 
         return loginResult;
     }
 
     public async Task Logout()
     {
-        await _localStorage.RemoveItemAsync(LocalStorageAuthTokenKey);
-        await _localStorage.RemoveItemAsync(LocalStorageRefreshTokenKey);
+        await _localStorage.RemoveItemAsync(Constants.LocalStorageAuthTokenKey);
+        await _localStorage.RemoveItemAsync(Constants.LocalStorageRefreshTokenKey);
 
         ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
 
-        _httpClient.DefaultRequestHeaders.Authorization = null;
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        httpClient.DefaultRequestHeaders.Authorization = null;
     }
 }

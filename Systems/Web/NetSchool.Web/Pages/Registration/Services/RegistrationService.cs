@@ -8,11 +8,11 @@ namespace NetSchool.Web.Pages.Registration.Services;
 
 public class RegistrationService : IRegistrationService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public RegistrationService(HttpClient httpClient)
+    public RegistrationService(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task Create(RegisterUserAccountModel model)
@@ -20,7 +20,8 @@ public class RegistrationService : IRegistrationService
         var requestContent = JsonContent.Create(model);
         try
         {
-            var response = await _httpClient.PostAsync("v1/accounts", requestContent);
+            var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+            var response = await httpClient.PostAsync("v1/accounts", requestContent);
         }
         catch
         {

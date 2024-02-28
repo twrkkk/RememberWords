@@ -8,7 +8,7 @@ using NetSchool.Services.Logger;
 
 namespace NetSchool.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/[controller]")]

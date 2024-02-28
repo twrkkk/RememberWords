@@ -5,16 +5,17 @@ namespace NetSchool.Web.Services.CardCollections;
 
 public class CardCollectionService : ICardCollectionsService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public CardCollectionService(HttpClient httpClient)
+    public CardCollectionService(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<IEnumerable<CardCollectionModel>> GetAll()
     {
-        var response = await _httpClient.GetAsync("v1/cardCollections");
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.GetAsync("v1/cardCollections");
         if (!response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -26,7 +27,8 @@ public class CardCollectionService : ICardCollectionsService
 
     public async Task<CardCollectionModel> Get(Guid id)
     {
-        var response = await _httpClient.GetAsync($"v1/cardCollections/{id}");
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.GetAsync($"v1/cardCollections/{id}");
         if (!response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -38,7 +40,8 @@ public class CardCollectionService : ICardCollectionsService
     public async Task Create(CreateModel model)
     {
         var requestContent = JsonContent.Create(model);
-        var response = await _httpClient.PostAsync("v1/cardCollections", requestContent);
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.PostAsync("v1/cardCollections", requestContent);
 
         var content = await response.Content.ReadAsStringAsync();
 
@@ -51,7 +54,8 @@ public class CardCollectionService : ICardCollectionsService
     public async Task Update(Guid id, UpdateModel model)
     {
         var requestContent = JsonContent.Create(model);
-        var response = await _httpClient.PutAsync($"v1/cardCollections/{id}", requestContent);
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.PutAsync($"v1/cardCollections/{id}", requestContent);
 
         var content = await response.Content.ReadAsStringAsync();
 
@@ -62,7 +66,8 @@ public class CardCollectionService : ICardCollectionsService
     }
     public async Task Delete(Guid id)
     {
-        var response = await _httpClient.DeleteAsync($"v1/cardCollections/{id}");
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.DeleteAsync($"v1/cardCollections/{id}");
 
         var content = await response.Content.ReadAsStringAsync();
 

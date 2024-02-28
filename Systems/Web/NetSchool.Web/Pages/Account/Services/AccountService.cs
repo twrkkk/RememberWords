@@ -8,11 +8,11 @@ namespace NetSchool.Web.Pages.Account.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AccountService(HttpClient httpClient)
+        public AccountService(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task ChangePassword(ChangePasswordModel model)
@@ -20,7 +20,8 @@ namespace NetSchool.Web.Pages.Account.Services
             var requestContent = JsonContent.Create(model);
             try
             {
-                var response = await _httpClient.PostAsync("v1/accounts/ChangePassword", requestContent);
+                var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+                var response = await httpClient.PostAsync("v1/accounts/ChangePassword", requestContent);
             }
             catch
             {
@@ -33,7 +34,8 @@ namespace NetSchool.Web.Pages.Account.Services
             var requestContent = JsonContent.Create(new EmailConfirmModel { Email = userEmail, Code = code});
             try
             {
-                var response = await _httpClient.PostAsync("v1/accounts/ConfirmEmail", requestContent);
+                var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+                var response = await httpClient.PostAsync("v1/accounts/ConfirmEmail", requestContent);
             }
             catch
             {
@@ -46,7 +48,8 @@ namespace NetSchool.Web.Pages.Account.Services
             var requestContent = JsonContent.Create(new ResetPasswordModel { Email = email });
             try
             {
-                var response = await _httpClient.PostAsync("v1/accounts/ResetPassword", requestContent);
+                var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+                var response = await httpClient.PostAsync("v1/accounts/ResetPassword", requestContent);
             }
             catch
             {
