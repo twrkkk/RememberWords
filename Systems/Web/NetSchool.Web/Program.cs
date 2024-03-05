@@ -19,9 +19,7 @@ builder.Services.AddTransient<RefreshTokenDelegatingHandler>();
 builder.Services.AddHttpClient("delegatingClient", c =>
 {
     c.BaseAddress = new Uri(Settings.ApiRoot);
-})
-    .AddHttpMessageHandler<RefreshTokenDelegatingHandler>()
-    ;
+}).AddHttpMessageHandler<RefreshTokenDelegatingHandler>();
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();

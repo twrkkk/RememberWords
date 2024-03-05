@@ -7,4 +7,10 @@ public class CardCollectionModel
     public string Name { get; set; }
     public IList<CardModel> Cards { get; set; }
     public DateTime TimeExpiraton { get; set; }
+
+    public CardCollectionModel()
+    {
+        Cards = new List<CardModel>();
+        Name = string.Empty;
+    }
 }

@@ -31,9 +31,7 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
         if (response.StatusCode != HttpStatusCode.Unauthorized)
             return response;
 
-        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
-
-        var content = await RefreshAccessToken(httpClient);
+        var content = await RefreshAccessToken();
 
         var loginResult = JsonSerializer.Deserialize<LoginResult>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResult();
 
@@ -47,7 +45,7 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
         return responceWithNewAccessToken;
     }
 
-    private async Task<string> RefreshAccessToken(HttpClient httpClient)
+    private async Task<string> RefreshAccessToken()
     {
         var refreshToken = await _localStorage.GetItemAsync<string>(Constants.LocalStorageRefreshTokenKey);
 
@@ -62,6 +60,8 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
         };
 
         var requestContent = new FormUrlEncodedContent(request_body);
+
+        var httpClient = _httpClientFactory.CreateClient();
 
         var refreshTokenResponse = await httpClient.PostAsync(url, requestContent);
 

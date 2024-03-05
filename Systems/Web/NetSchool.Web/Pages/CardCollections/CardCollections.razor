@@ -21,7 +21,7 @@
         <col />
         <col />
         <col />
-        <col style="width:100px;" />
+        <col style="width:150px;" />
     </ColGroup>
     <ToolBarContent>
         <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCollection">Add</MudButton>
@@ -43,6 +43,7 @@
             <MudTd>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
+                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => ShowCollection(context.Id)" />
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -98,5 +99,10 @@
 
         await CardCollectionsService.Delete(id);
         await ReloadData();
+    }
+
+    private void ShowCollection(Guid id)
+    {
+        NavManager.NavigateTo($"/show-collection?_collectionId={id}");
     }
 }

@@ -1,0 +1,55 @@
+﻿@page "/show-collection"
+@using NetSchool.Web.Entities.CardCollections
+@using NetSchool.Web.Extensions
+@using NetSchool.Web.Services.CardCollections
+@inject ICardCollectionsService CardCollectionService
+@layout MainLayout
+
+<MudText Class="display: flex; justify-content: center; align-items: center;">Collection: @_collection.Name</MudText>
+
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <MudCarousel @ref="_carousel" ItemsSource="@_collection.Cards" @bind-SelectedIndex="selectedIndex" Style="width: 60vw; height:60vh;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
+            <ItemTemplate>
+                <div class="d-flex flex-column flex-column justify-center flex-row" style="height:100%; padding-left:25%; padding-right:25%">
+                    <CardViewComponent Front="@context.Front" Reverse="@context.Reverse" />
+                </div>
+            </ItemTemplate>
+        </MudCarousel>
+    </div>
+
+    <MudSwitch @bind-Checked="@_arrows" Color="Color.Primary">Show Arrows</MudSwitch>
+    <MudSwitch @bind-Checked="@_bullets" Color="Color.Primary">Show Bullets</MudSwitch>
+    <MudSwitch @bind-Checked="@_enableSwipeGesture" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
+    <MudSwitch @bind-Checked="@_autocycle" Color="Color.Primary">Auto Cycle (Default: 5 secs)</MudSwitch>
+    <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
+    <br />
+    @code {
+    private MudCarousel<CardModel> _carousel;
+    private bool _arrows = true;
+    private bool _bullets = true;
+    private bool _enableSwipeGesture = true;
+    private bool _autocycle = true;
+    private int selectedIndex = 0;
+
+    [SupplyParameterFromQuery] private string _collectionId { get; set; }
+    private CardCollectionModel _collection { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(_collectionId))
+            return;
+
+        _collection = await CardCollectionService.Get(new Guid(_collectionId));
+
+        _collection.Cards.Shuffle();
+    }
+
+    private void ShuffleCards()
+    {
+        if (_collection == null || _collection.Cards == null)
+            return;
+
+        _collection.Cards.Shuffle();
+        selectedIndex = 0;
+    }
+}

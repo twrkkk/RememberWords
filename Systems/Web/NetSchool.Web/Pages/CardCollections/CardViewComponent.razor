@@ -1,0 +1,38 @@
+﻿<MudCard Class="card" @onclick="ToggleCard">
+    @if (showFront)
+        Text = Front;
+    else
+        Text = Reverse;
+
+    <MudCardContent style="display: flex; justify-content: center; align-items: center; text-align: center; height: 100%;">
+        <p>@Text</p>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter] public string Front { get; set; }
+    [Parameter] public string Reverse { get; set; }
+    private string Text { get; set; }
+    bool showFront = true;
+
+    void ToggleCard()
+    {
+        showFront = !showFront;
+    }
+}
+
+<style>
+    p {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .card {
+        height: 70%;
+        word-break: break-all;
+    }
+
+</style>

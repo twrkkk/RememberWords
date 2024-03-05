@@ -78,7 +78,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Worker", "Systems
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.EmailSender", "Services\NetSchool.Services.EmailSender\NetSchool.Services.EmailSender.csproj", "{49534B23-81EF-49A9-AA7B-97DCB4ECF26D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Web.Services.CardCollectionActions", "Systems\Web\NetSchool.Web.Services.CardCollectionActions\NetSchool.Web.Services.CardCollectionActions.csproj", "{1CC84DA3-CEF6-470C-A8E7-C4C920D2F3D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web.Services.CardCollectionActions", "Systems\Web\NetSchool.Web.Services.CardCollectionActions\NetSchool.Web.Services.CardCollectionActions.csproj", "{1CC84DA3-CEF6-470C-A8E7-C4C920D2F3D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
