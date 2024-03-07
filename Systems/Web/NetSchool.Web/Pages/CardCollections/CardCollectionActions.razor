@@ -78,14 +78,20 @@
             cardActions = new UpdateCardCollectionActions(cardService);
         }
 
-        var collectionModel = await cardService.Get(collectionId);
+        try
+        {
+            var collectionModel = await cardService.Get(collectionId);
+            if (collectionModel == null)
+                return;
 
-        if (collectionModel == null)
-            return;
-
-        cardActions.collection.Name = collectionModel.Name;
-        cardActions.collection.UserId = collectionModel.UserId;
-        cardActions.collection.Cards = collectionModel.Cards;
+            cardActions.collection.Name = collectionModel.Name;
+            cardActions.collection.UserId = collectionModel.UserId;
+            cardActions.collection.Cards = collectionModel.Cards;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
     }
 
     private async Task AddCard()

@@ -1,0 +1,68 @@
+﻿@page "/user"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using NetSchool.Web.Entities.User
+@using NetSchool.Web.Pages.Account.Services
+@using NetSchool.Web.Providers
+@inject NavigationManager NavManager
+@inject IAccountService accountService
+@inject ISnackbar Snackbar
+@attribute [Authorize]
+@layout MainLayout
+
+@if (user == null)
+{
+    <MudText>Loading</MudText>
+}
+else
+{
+    <MudCard Style="padding-left:10vh;padding-right:10vh;padding-top:10vh;padding-bottom:10vh;">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="6" md="5">
+                    <MudText Typo="Typo.h5">User Profile</MudText>
+                </MudItem>
+            </MudGrid>
+            <MudDivider Margin="Margin.Top" />
+
+            <MudGrid>
+                <MudItem xs="12" md="3">
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">Name:</MudText>
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">Card collections:</MudText>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">@user.UserName</MudText>
+                        @foreach (var collection in user.CardCollections)
+                    {
+                        <NavLink href=@string.Format("/show-collection?_collectionId={0}", collection.Id)>
+                            <MudText Typo="Typo.subtitle2">@collection.Name</MudText>
+                            </NavLink>
+                    }
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}
+
+
+@code {
+    [SupplyParameterFromQuery] private string userId { get; set; }
+    private UserAccountModel user { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                NavManager.NavigateTo("/");
+                return;
+            }
+            user = await accountService.Get(new Guid(userId));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

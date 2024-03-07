@@ -26,7 +26,14 @@ namespace NetSchool.Web.Services.CardCollectionActions
                 Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList()
             };
 
-            await cardService.Create(createdCollection);
+            try
+            {
+                await cardService.Create(createdCollection);
+            }
+            catch 
+            {
+                throw;
+            }
         }
     }
 }

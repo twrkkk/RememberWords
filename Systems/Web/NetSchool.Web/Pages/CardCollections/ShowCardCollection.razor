@@ -3,6 +3,8 @@
 @using NetSchool.Web.Extensions
 @using NetSchool.Web.Services.CardCollections
 @inject ICardCollectionsService CardCollectionService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavManager
 @layout MainLayout
 
 <MudText Class="display: flex; justify-content: center; align-items: center;">Collection: @_collection.Name</MudText>
@@ -39,7 +41,15 @@
         if (string.IsNullOrEmpty(_collectionId))
             return;
 
-        _collection = await CardCollectionService.Get(new Guid(_collectionId));
+        try
+        {
+            _collection = await CardCollectionService.Get(new Guid(_collectionId));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+            NavManager.NavigateTo("/");
+        }
 
         _collection.Cards.Shuffle();
     }

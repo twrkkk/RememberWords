@@ -1,0 +1,94 @@
+﻿@page "/profile"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using NetSchool.Web.Entities.User
+@using NetSchool.Web.Pages.Account.Services
+@using NetSchool.Web.Providers
+@inject NavigationManager NavManager
+@inject IAccountService accountService
+@inject ISnackbar Snackbar
+@attribute [Authorize]
+@layout MainLayout
+
+@if (user == null)
+{
+    <MudText>Loading</MudText>
+}
+else
+{
+    <MudCard Style="padding-left:10vh;padding-right:10vh;padding-top:10vh;padding-bottom:10vh;">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="12" md="1">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditProfile()" />
+                </MudItem>
+                <MudItem xs="6" md="5">
+                    <MudText Typo="Typo.h5">User Profile</MudText>
+                </MudItem>
+            </MudGrid>
+            <MudDivider Margin="Margin.Top" />
+
+            <MudGrid>
+                <MudItem xs="12" md="3">
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">Name:</MudText>
+                    <MudText Typo="Typo.subtitle1">Email:</MudText>
+                    <MudText Typo="Typo.subtitle1">Registration date:</MudText>
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">Card collections:</MudText>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudText Typo="Typo.subtitle1" Margin="Margin.Top">@user.UserName</MudText>
+                        <MudGrid>
+                            <MudItem xs="6" md="1">
+                                @if (user.EmailConfirmed)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" />
+                            }
+                            else
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.WarningAmber" />
+                            }
+                        </MudItem>
+
+                        <MudItem xs="6" md="5">
+                            <MudText Typo="Typo.subtitle1">@user.Email</MudText>
+                            </MudItem>
+                        </MudGrid>
+                        <MudText Typo="Typo.subtitle1">@user.RegistrationDate.ToString()</MudText>
+                        @foreach (var collection in user.CardCollections)
+                    {
+                        <NavLink href=@string.Format("/show-collection?_collectionId={0}", collection.Id)>
+                            <MudText Typo="Typo.subtitle2">@collection.Name</MudText>
+                            </NavLink>
+                    }
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+
+
+
+}
+
+
+@code {
+    private UserAccountModel user { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userId = await accountService.GetUserIdAsync();
+            user = await accountService.Get(new Guid(userId));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void EditProfile()
+    {
+        NavManager.NavigateTo("/edit-profile");
+    }
+}

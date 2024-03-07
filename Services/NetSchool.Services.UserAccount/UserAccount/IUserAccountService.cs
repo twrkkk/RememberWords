@@ -1,5 +1,6 @@
 ﻿using NetSchool.Context.Entities;
 using NetSchool.Services.UserAccount.Models;
+using NetSchool.Services.UserAccount.UserAccount.Models;
 
 namespace NetSchool.Services.UserAccount;
 
@@ -17,6 +18,8 @@ public interface IUserAccountService
     Task ConfirmEmail(EmailConfirmModel model);
     Task SendEmailToChangePassword(ResetPasswordModel model);
     Task ChangePassword(ChangePasswordModel model);
+    Task<UserAccountModel> Get(Guid id);
+    Task EditUserProfileAsync(EditProfileModel model);
 
 
 

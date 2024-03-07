@@ -16,13 +16,13 @@ public class EntityNotFoundExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        if (context.Exception is EntityNotFoundException)
+        if (context.Exception is EntityNotFoundException || context.Exception is ProcessException)
         {
             _logger.Information(context.Exception, context.Exception.Message);
 
             context.Result = new NotFoundObjectResult(context.Exception.Message)
             {
-                StatusCode = 400
+                StatusCode = 400,
             };
         }
     }

@@ -56,7 +56,14 @@ namespace NetSchool.Web.Services.CardCollectionActions
         public override async Task SaveChanges(Guid collectionId)
         {
             updateModel.Name = collection.Name;
-            await cardService.Update(collectionId, updateModel);
+            try
+            {
+                await cardService.Update(collectionId, updateModel);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

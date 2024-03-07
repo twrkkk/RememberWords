@@ -1,0 +1,63 @@
+﻿@page "/edit-profile"
+@using Microsoft.AspNetCore.Authorization
+@using NetSchool.Web.Entities.User
+@using NetSchool.Web.Pages.Account.Models
+@using NetSchool.Web.Pages.Account.Services
+@inject NavigationManager NavManager
+@inject IAccountService accountService
+@inject ISnackbar Snackbar
+@layout MainLayout
+@attribute [Authorize]
+
+@if (user == null)
+{
+    <MudText>Loading</MudText>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+
+            <MudText Typo="Typo.h5">Edit User Profile</MudText>
+            <MudDivider Margin="Margin.Top" />
+
+            <MudTextField @bind-Value="user.UserName" Label="Name" />
+            <MudTextField @bind-Value="user.Email" Label="Email" />
+
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SaveChanges">Save changes</MudButton>
+        </MudCardContent>
+    </MudCard>
+
+}
+
+@code {
+    private UserAccountModel user { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userId = await accountService.GetUserIdAsync();
+            user = await accountService.Get(new Guid(userId));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task SaveChanges()
+    {
+        try
+        {
+            var model = new EditProfileModel { Id = user.Id, UserName = user.UserName, Email = user.Email };
+            await accountService.EditUserProfileAsync(model);
+            NavManager.NavigateTo("/profile");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+
+    }
+}

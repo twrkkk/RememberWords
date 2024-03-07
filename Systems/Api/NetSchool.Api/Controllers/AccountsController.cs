@@ -4,6 +4,7 @@ using AutoMapper;
 using NetSchool.Services.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 using NetSchool.Services.UserAccount.Models;
+using NetSchool.Services.UserAccount.UserAccount.Models;
 
 [ApiController]
 [ApiVersion("1.0")]
@@ -29,11 +30,17 @@ public class AccountsController : ControllerBase
         return user;
     }
 
+    [HttpGet("")]
+    public async Task<UserAccountModel> Get([FromQuery]Guid id)
+{
+        var user = await userAccountService.Get(id);
+        return user;
+    }
+
     [HttpPost("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmail([FromBody] EmailConfirmModel model)
     {
         await userAccountService.ConfirmEmail(model);
-
         return Ok();
     }
 
@@ -41,7 +48,6 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
     {
         await userAccountService.SendEmailToChangePassword(model);
-
         return Ok();
     }
 
@@ -49,7 +55,13 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
     {
         await userAccountService.ChangePassword(model);
+        return Ok();
+    }
 
+    [HttpPut("Edit")]
+    public async Task<IActionResult> EditUserProfile([FromBody] EditProfileModel model)
+    {
+        await userAccountService.EditUserProfileAsync(model);
         return Ok();
     }
 }

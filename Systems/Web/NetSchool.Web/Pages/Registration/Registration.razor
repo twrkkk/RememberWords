@@ -17,8 +17,6 @@
                 <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign In</MudText>
 
                 <MudAlert Severity="Severity.Error" Class="@(ShowErrors ? "mb-3 d-block" : "d-none")">
-                    @Error
-                    <br />
                     @ErrorDetail
                 </MudAlert>
 
@@ -69,7 +67,6 @@
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     private bool ShowErrors;
-    private string Error;
     private string ErrorDetail;
 
     void TogglePasswordVisibility()
@@ -92,11 +89,18 @@
     private async Task OnValidSubmit()
     {
         ShowErrors = false;
-        Error = "";
         ErrorDetail = "";
 
-        await RegistrationService.Create(model);
+        try
+        {
+            await RegistrationService.Create(model);
+            NavigationManager.NavigateTo("/EmailConfirmNotification");
+        }
+        catch (Exception ex)
+        {
+            ErrorDetail = ex.Message;
+            ShowErrors = true;
+        }
 
-        NavigationManager.NavigateTo("/EmailConfirmNotification");
     }
 }

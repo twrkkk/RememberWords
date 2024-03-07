@@ -13,6 +13,7 @@ using NetSchool.Services.UserAccount.Models;
 using System.Web;
 using MimeKit;
 using System.Net.Mail;
+using NetSchool.Services.UserAccount.UserAccount.Models;
 
 public class UserAccountService : IUserAccountService
 {
@@ -38,6 +39,8 @@ public class UserAccountService : IUserAccountService
     {
         return !(await userManager.Users.AnyAsync());
     }
+
+
 
     public async Task<UserAccountModel> Create(RegisterUserAccountModel model)
     {
@@ -136,5 +139,32 @@ public class UserAccountService : IUserAccountService
             throw new EntityNotFoundException($"User (EMAIL = {model.Email}) not found.");
 
         await userManager.ResetPasswordAsync(user, model.Code, model.NewPassword);
+    }
+
+    public async Task<UserAccountModel> Get(Guid id)
+    {
+        var user = await userManager.FindByIdAsync(id.ToString());
+
+        if (user == null)
+            throw new EntityNotFoundException($"User (Id = {id}) not found.");
+
+        return mapper.Map<UserAccountModel>(user);
+    }
+
+    public async Task EditUserProfileAsync(EditProfileModel model)
+    {
+        var user = await userManager.FindByIdAsync(model.Id.ToString());
+
+        if (user == null)
+            throw new EntityNotFoundException($"User (Id = {model.Id}) not found.");
+
+        if(user.Email != model.Email)
+            user.EmailConfirmed = false;
+        user.UserName = model.UserName;
+        user.Email = model.Email;
+
+        await userManager.UpdateAsync(user);
+
+        await SendEmailConfirmation(user);
     }
 }

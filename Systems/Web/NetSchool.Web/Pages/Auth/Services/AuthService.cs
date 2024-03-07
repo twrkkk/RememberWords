@@ -41,7 +41,7 @@ public class AuthService : IAuthService
 
         var requestContent = new FormUrlEncodedContent(request_body);
 
-        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var httpClient = _httpClientFactory.CreateClient();
 
         var response = await httpClient.PostAsync(url, requestContent);
 

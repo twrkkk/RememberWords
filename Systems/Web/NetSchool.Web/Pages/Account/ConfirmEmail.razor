@@ -1,6 +1,7 @@
 ﻿@page "/ConfirmEmail"
 @using NetSchool.Web.Pages.Account.Services
 @inject IAccountService AccountService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavManager
 @layout SimpleLayout
 
@@ -15,7 +16,14 @@
         if (userEmail == null || Code == null)
             return;
 
-        await AccountService.ConfirmEmail(userEmail, Code);
+        try
+        {
+            await AccountService.ConfirmEmail(userEmail, Code);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
 
         NavManager.NavigateTo("/ConfirmEmailResult");
     }

@@ -18,14 +18,13 @@ public class RegistrationService : IRegistrationService
     public async Task Create(RegisterUserAccountModel model)
     {
         var requestContent = JsonContent.Create(model);
-        try
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.PostAsync("v1/accounts", requestContent);
+
+        if (!response.IsSuccessStatusCode)
         {
-            var httpClient = _httpClientFactory.CreateClient("delegatingClient");
-            var response = await httpClient.PostAsync("v1/accounts", requestContent);
-        }
-        catch
-        {
-            throw;
+            var content = await response.Content.ReadAsStringAsync();
+            throw new Exception(content);
         }
     }
 }

@@ -8,7 +8,7 @@ using NetSchool.Services.Logger;
 
 namespace NetSchool.Api.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/[controller]")]
@@ -36,26 +36,18 @@ namespace NetSchool.Api.Controllers
         //[Authorize(AppScopes.CollectionsRead)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            try
-            {
-                var result = await _cartCollectionService.Get(id);
-                return Ok(result);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _cartCollectionService.Get(id);
+            return Ok(result);
 
             //var result = await _cartCollectionService.Get(id);
             //return Ok(result);
         }
 
         [HttpPost("")]
-       // [Authorize(AppScopes.CollectionsWrite)]
+        // [Authorize(AppScopes.CollectionsWrite)]
         public async Task<CardCollectionModel> Create([FromBody] CreateModel request)
         {
             var result = await _cartCollectionService.Create(request);
-
             return result;
         }
 
@@ -63,15 +55,7 @@ namespace NetSchool.Api.Controllers
         //[Authorize(AppScopes.CollectionsWrite)]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateModel request)
         {
-            try
-            {
-                await _cartCollectionService.Update(id, request);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            await _cartCollectionService.Update(id, request);
             return Ok();
         }
 
@@ -79,15 +63,7 @@ namespace NetSchool.Api.Controllers
         //[Authorize(AppScopes.CollectionsWrite)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            try
-            {
-                await _cartCollectionService.Delete(id);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            await _cartCollectionService.Delete(id);
             return Ok();
         }
     }
