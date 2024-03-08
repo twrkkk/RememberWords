@@ -8,7 +8,7 @@ namespace NetSchool.Services.CardCollections
         public static IServiceCollection AddCartCollectionService(this IServiceCollection services)
         {
             return services
-                .AddSingleton<ICartCollectionService, CartCollectionService>();
+                .AddScoped<ICartCollectionService, CartCollectionService>();
         }
     }
 }

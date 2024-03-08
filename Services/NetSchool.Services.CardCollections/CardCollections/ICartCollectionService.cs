@@ -1,4 +1,6 @@
-﻿namespace NetSchool.Services.CardCollections.CardCollections;
+﻿using NetSchool.Context.Entities;
+
+namespace NetSchool.Services.CardCollections.CardCollections;
 
 public interface ICartCollectionService
 {
@@ -7,4 +9,5 @@ public interface ICartCollectionService
     Task<CardCollectionModel> Create(CreateModel model);
     Task Update(Guid id, UpdateModel model);
     Task Delete(Guid id);
+    Task SendEmailForSubscribers(User user, CardCollection newCollection);
 }

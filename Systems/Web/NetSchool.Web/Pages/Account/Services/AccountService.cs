@@ -97,5 +97,31 @@ namespace NetSchool.Web.Pages.Account.Services
                 throw new Exception(content);
             }
         }
+
+        public async Task Subscribe(Guid followingId)
+        {
+            await SubscriptionHandling(followingId, true);
+        }
+
+        public async Task Unsubscribe(Guid followingId)
+        {
+            await SubscriptionHandling(followingId, false);
+        }
+
+        private async Task SubscriptionHandling(Guid followingId, bool subscribe)
+        {
+            var userId = await GetUserIdAsync();
+            var requestContent = JsonContent.Create(new SubscribeModel { UserId = new Guid(userId), FollowId = followingId });
+
+            var url = "v1/accounts/" + (subscribe ? "Subscribe" : "Unsubscribe");
+            var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+            var response = await httpClient.PostAsync(url, requestContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                throw new Exception(content);
+            }
+        }
     }
 }

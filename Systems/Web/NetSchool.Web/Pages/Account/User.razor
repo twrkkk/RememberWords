@@ -34,12 +34,19 @@ else
                     <MudText Typo="Typo.subtitle1" Margin="Margin.Top">@user.UserName</MudText>
                         @foreach (var collection in user.CardCollections)
                     {
-                        <NavLink href=@string.Format("/show-collection?_collectionId={0}", collection.Id)>
-                            <MudText Typo="Typo.subtitle2">@collection.Name</MudText>
-                            </NavLink>
+                        <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
                     }
                 </MudItem>
             </MudGrid>
+
+            @if (Subscribed)
+            {
+                <MudButton Disabled="SubscribeButtonDisabled" OnClick="Unsubscribe">Unsubscribe</MudButton>
+            }
+            else
+            {
+                <MudButton Disabled="SubscribeButtonDisabled" OnClick="Subscribe">Subscribe</MudButton>
+            }
         </MudCardContent>
     </MudCard>
 }
@@ -48,6 +55,8 @@ else
 @code {
     [SupplyParameterFromQuery] private string userId { get; set; }
     private UserAccountModel user { get; set; }
+    private bool Subscribed { get; set; }
+    private bool SubscribeButtonDisabled { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,10 +68,47 @@ else
                 return;
             }
             user = await accountService.Get(new Guid(userId));
+            var watcherId = new Guid(await accountService.GetUserIdAsync()); // person who opened this profile
+            Subscribed = user.Followers.Any(x => x.Id == watcherId);
         }
         catch (Exception ex)
         {
             Snackbar.Add(ex.Message, Severity.Error);
         }
+    }
+
+    private async Task Subscribe()
+    {
+        try
+        {
+            SubscribeButtonDisabled = true;
+            await accountService.Subscribe(new Guid(userId));
+            Subscribed = true;
+            SubscribeButtonDisabled = false;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task Unsubscribe()
+    {
+        try
+        {
+            SubscribeButtonDisabled = true;
+            await accountService.Unsubscribe(new Guid(userId));
+            Subscribed = false;
+            SubscribeButtonDisabled = false;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void OpenCollection(Guid collectionId)
+    {
+        NavManager.NavigateTo($"/show-collection?collectionId={collectionId}");
     }
 }

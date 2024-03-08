@@ -40,8 +40,6 @@ public class UserAccountService : IUserAccountService
         return !(await userManager.Users.AnyAsync());
     }
 
-
-
     public async Task<UserAccountModel> Create(RegisterUserAccountModel model)
     {
         registerUserAccountModelValidator.Check(model);
@@ -158,7 +156,7 @@ public class UserAccountService : IUserAccountService
         if (user == null)
             throw new EntityNotFoundException($"User (Id = {model.Id}) not found.");
 
-        if(user.Email != model.Email)
+        if (user.Email != model.Email)
             user.EmailConfirmed = false;
         user.UserName = model.UserName;
         user.Email = model.Email;
@@ -166,5 +164,41 @@ public class UserAccountService : IUserAccountService
         await userManager.UpdateAsync(user);
 
         await SendEmailConfirmation(user);
+    }
+
+    public async Task Subscribe(SubscribeModel model)
+    {
+        await SubscriptionHandling(model, true);
+    }
+
+    public async Task Unsubscribe(SubscribeModel model)
+    {
+        await SubscriptionHandling(model, false);
+    }
+
+    private async Task SubscriptionHandling(SubscribeModel model, bool subscribe)
+    {
+        var user = await userManager.FindByIdAsync(model.UserId.ToString());
+        if (user == null)
+            throw new EntityNotFoundException($"User (Id = {model.UserId}) not found.");
+
+        var following = await userManager.FindByIdAsync(model.FollowId.ToString());
+        if (following == null)
+            throw new EntityNotFoundException($"User (Id = {model.FollowId}) not found.");
+
+        if (subscribe)
+        {
+            user.Following.Add(following);
+            following.Followers.Add(user);
+
+        }
+        else
+        {
+            user.Following.Remove(following);
+            following.Followers.Remove(user);
+        }
+
+        await userManager.UpdateAsync(user);
+        //await userManager.UpdateAsync(following);
     }
 }

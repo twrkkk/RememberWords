@@ -33,17 +33,17 @@
     private bool _autocycle = true;
     private int selectedIndex = 0;
 
-    [SupplyParameterFromQuery] private string _collectionId { get; set; }
+    [SupplyParameterFromQuery] private string collectionId { get; set; }
     private CardCollectionModel _collection { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        if (string.IsNullOrEmpty(_collectionId))
+        if (string.IsNullOrEmpty(collectionId))
             return;
 
         try
         {
-            _collection = await CardCollectionService.Get(new Guid(_collectionId));
+            _collection = await CardCollectionService.Get(new Guid(collectionId));
         }
         catch (Exception ex)
         {

@@ -56,9 +56,7 @@ else
                         <MudText Typo="Typo.subtitle1">@user.RegistrationDate.ToString()</MudText>
                         @foreach (var collection in user.CardCollections)
                     {
-                        <NavLink href=@string.Format("/show-collection?_collectionId={0}", collection.Id)>
-                            <MudText Typo="Typo.subtitle2">@collection.Name</MudText>
-                            </NavLink>
+                        <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
                     }
                 </MudItem>
             </MudGrid>
@@ -90,5 +88,10 @@ else
     private void EditProfile()
     {
         NavManager.NavigateTo("/edit-profile");
+    }
+
+    private void OpenCollection(Guid collectionId)
+    {
+        NavManager.NavigateTo($"/show-collection?collectionId={collectionId}");
     }
 }

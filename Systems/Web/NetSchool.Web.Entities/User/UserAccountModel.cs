@@ -8,6 +8,8 @@ public class UserAccountModel
     public string UserName { get; set; }
     public string Email { get; set; }
     public IEnumerable<CardCollectionModel> CardCollections { get; set; }
+    public IEnumerable<UserAccountPreviewModel> Followers { get; set; }
+    public IEnumerable<UserAccountPreviewModel> Following { get; set; }
     public DateTime? RegistrationDate { get; set; }
     public bool EmailConfirmed {  get; set; }   
 }

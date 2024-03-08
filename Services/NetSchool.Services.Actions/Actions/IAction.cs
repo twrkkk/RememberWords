@@ -6,4 +6,5 @@ public interface IAction
 {
     Task SendEmailConfirmation(EmailModel model);
     Task SendResetPasswordEmail(EmailModel model);
+    Task SendEmailForSubscribers(EmailModel model);
 }

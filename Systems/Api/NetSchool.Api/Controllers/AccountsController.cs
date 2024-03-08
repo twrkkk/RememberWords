@@ -5,6 +5,7 @@ using NetSchool.Services.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 using NetSchool.Services.UserAccount.Models;
 using NetSchool.Services.UserAccount.UserAccount.Models;
+using NetSchool.Services.UserAccount.Models;
 
 [ApiController]
 [ApiVersion("1.0")]
@@ -31,8 +32,8 @@ public class AccountsController : ControllerBase
     }
 
     [HttpGet("")]
-    public async Task<UserAccountModel> Get([FromQuery]Guid id)
-{
+    public async Task<UserAccountModel> Get([FromQuery] Guid id)
+    {
         var user = await userAccountService.Get(id);
         return user;
     }
@@ -62,6 +63,20 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> EditUserProfile([FromBody] EditProfileModel model)
     {
         await userAccountService.EditUserProfileAsync(model);
+        return Ok();
+    }
+
+    [HttpPost("Subscribe")]
+    public async Task<IActionResult> Subscribe([FromBody] SubscribeModel model)
+    {
+        await userAccountService.Subscribe(model);
+        return Ok();
+    }
+
+    [HttpPost("Unsubscribe")]
+    public async Task<IActionResult> Unsubscribe([FromBody] SubscribeModel model)
+    {
+        await userAccountService.Unsubscribe(model);
         return Ok();
     }
 }

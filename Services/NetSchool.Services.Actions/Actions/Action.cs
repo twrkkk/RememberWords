@@ -2,6 +2,7 @@
 
 using NetSchool.Services.EmailSender.Models;
 using NetSchool.Services.RabbitMq;
+using System;
 using System.Threading.Tasks;
 
 public class Action : IAction
@@ -16,6 +17,11 @@ public class Action : IAction
     public async Task SendEmailConfirmation(EmailModel model)
     {
         await rabbitMq.PushAsync(QueueNames.EMAIL_CONFIRMATION, model);
+    }
+
+    public async Task SendEmailForSubscribers(EmailModel model)
+    {
+        await rabbitMq.PushAsync(QueueNames.SUBSCRIBERS_NOTIFICATION, model);
     }
 
     public async Task SendResetPasswordEmail(EmailModel model)

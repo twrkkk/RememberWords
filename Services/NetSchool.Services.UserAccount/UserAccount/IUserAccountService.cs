@@ -20,6 +20,8 @@ public interface IUserAccountService
     Task ChangePassword(ChangePasswordModel model);
     Task<UserAccountModel> Get(Guid id);
     Task EditUserProfileAsync(EditProfileModel model);
+    Task Subscribe(SubscribeModel model);
+    Task Unsubscribe(SubscribeModel model);
 
 
 

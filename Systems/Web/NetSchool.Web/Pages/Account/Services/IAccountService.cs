@@ -13,4 +13,6 @@ public interface IAccountService
     Task<UserAccountModel> Get(Guid id);
     Task<string> GetUserIdAsync();
     Task EditUserProfileAsync(EditProfileModel model);
+    Task Subscribe(Guid followingId);
+    Task Unsubscribe(Guid followingId);
 }
