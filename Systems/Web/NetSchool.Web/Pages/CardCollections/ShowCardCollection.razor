@@ -2,15 +2,38 @@
 @using NetSchool.Web.Entities.CardCollections
 @using NetSchool.Web.Extensions
 @using NetSchool.Web.Services.CardCollections
+@using NetSchool.Web.Pages.Account.Services;
+@using Blazored.LocalStorage;
+@using NetSchool.Web.Components;
 @inject ICardCollectionsService CardCollectionService
 @inject ISnackbar Snackbar
+@inject IAccountService AccountService
+@inject ILocalStorageService LocalStorage
 @inject NavigationManager NavManager
 @layout MainLayout
 
-<MudText Class="display: flex; justify-content: center; align-items: center;">Collection: @_collection.Name</MudText>
+<MudPaper Elevation="25">
+    <MudToolBar>
+        <MudText Class="display: flex; justify-content: center; align-items: center;">@_collection.Name</MudText>
+            <MudSpacer />
+            <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary">
+                <div class="menu-item"
+                    <MudSwitch @bind-Value="@Settings.Arrows" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Arrows</MudSwitch>
+                    <MudSwitch @bind-Value="@Settings.Bullets" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Bullets</MudSwitch>
+                    <MudSwitch @bind-Value="@Settings.SwipeGesture" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
+                    <MudSwitch @bind-Value="@Settings.Autocycle" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Auto Cycle</MudSwitch>
+                    <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
+                </div>
+            </MudMenu>
+            @if (_showEditCollectionButton)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="EditCollection" />
+            }
+        </MudToolBar>
+    </MudPaper>
 
     <div style="display: flex; justify-content: center; align-items: center;">
-        <MudCarousel @ref="_carousel" ItemsSource="@_collection.Cards" @bind-SelectedIndex="selectedIndex" Style="width: 60vw; height:60vh;" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
+    <MudCarousel @ref="_carousel" ItemsSource="@_collection.Cards" @bind-SelectedIndex="selectedIndex" Style="width: 60vw; height:60vh;" ShowArrows="Settings.Arrows" ShowBullets="Settings.Bullets" EnableSwipeGesture="Settings.SwipeGesture" AutoCycle="Settings.Autocycle">
             <ItemTemplate>
                 <div class="d-flex flex-column flex-column justify-center flex-row" style="height:100%; padding-left:25%; padding-right:25%">
                     <CardViewComponent Front="@context.Front" Reverse="@context.Reverse" />
@@ -19,22 +42,32 @@
         </MudCarousel>
     </div>
 
-    <MudSwitch @bind-Checked="@_arrows" Color="Color.Primary">Show Arrows</MudSwitch>
-    <MudSwitch @bind-Checked="@_bullets" Color="Color.Primary">Show Bullets</MudSwitch>
-    <MudSwitch @bind-Checked="@_enableSwipeGesture" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
-    <MudSwitch @bind-Checked="@_autocycle" Color="Color.Primary">Auto Cycle (Default: 5 secs)</MudSwitch>
-    <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
     <br />
-    @code {
-    private MudCarousel<CardModel> _carousel;
-    private bool _arrows = true;
-    private bool _bullets = true;
-    private bool _enableSwipeGesture = true;
-    private bool _autocycle = true;
-    private int selectedIndex = 0;
 
+@code {
+    private const string CollectionViewSettingsKey = "CollectionViewSettings";
+    private MudCarousel<CardModel> _carousel;
+    private int selectedIndex = 0;
+    private bool _showEditCollectionButton = false;
     [SupplyParameterFromQuery] private string collectionId { get; set; }
     private CardCollectionModel _collection { get; set; } = new();
+    [Parameter] public ViewSettings Settings { get; set; } = new();
+
+    public class ViewSettings
+    {
+        public bool Arrows { get; set; }
+        public bool Bullets { get; set; }
+        public bool SwipeGesture { get; set; }
+        public bool Autocycle { get; set; }
+
+        public ViewSettings()
+        {
+            Arrows = true;
+            Bullets = true;
+            SwipeGesture = true;
+            Autocycle = false;
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -44,6 +77,10 @@
         try
         {
             _collection = await CardCollectionService.Get(new Guid(collectionId));
+            _collection.Cards?.Shuffle();
+            var userId = await AccountService.GetUserIdAsync();
+            _showEditCollectionButton = userId == _collection.UserId.ToString(); // show edit collection button if user is creator of collection 
+            await LoadViewSettings();
         }
         catch (Exception ex)
         {
@@ -51,7 +88,6 @@
             NavManager.NavigateTo("/");
         }
 
-        _collection.Cards.Shuffle();
     }
 
     private void ShuffleCards()
@@ -62,4 +98,25 @@
         _collection.Cards.Shuffle();
         selectedIndex = 0;
     }
+
+    private void EditCollection()
+    {
+        NavManager.NavigateTo($"/update-collection?collectionId={collectionId}");
+    }
+
+    private async Task SaveViewSettings(bool value)
+    {
+        await LocalStorage.SetItemAsync(CollectionViewSettingsKey, Settings);
+    }
+
+    private async Task LoadViewSettings()
+    {
+        Settings = await LocalStorage.GetItemAsync<ViewSettings>(CollectionViewSettingsKey) ?? new ViewSettings();
+    }
 }
+
+<style>
+    .menu-item {
+        padding-left: 1vh
+    }
+</style>
