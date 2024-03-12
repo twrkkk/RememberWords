@@ -7,6 +7,7 @@ using NetSchool.Common.Validator;
 using NetSchool.Context;
 using NetSchool.Context.Entities;
 using NetSchool.Services.Actions;
+using NetSchool.Services.CardCollections.Models;
 using NetSchool.Services.EmailSender.Models;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -39,6 +40,22 @@ public class CartCollectionService : ICartCollectionService
         var collections = await context.CardCollections
             .Include(x => x.User)
             .Include(x => x.Cards)
+            .ToListAsync();
+
+        var result = _mapper.Map<IEnumerable<CardCollectionModel>>(collections);
+
+        return result;
+    }
+
+    public async Task<IEnumerable<CardCollectionModel>> GetPage(PageParameters parameters)
+    {
+        using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        var collections = await context.CardCollections
+            .Include(x => x.User)
+            .Include(x => x.Cards)
+            .Skip((parameters.Page - 1) * parameters.PageSize)
+            .Take(parameters.PageSize)
             .ToListAsync();
 
         var result = _mapper.Map<IEnumerable<CardCollectionModel>>(collections);

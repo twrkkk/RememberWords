@@ -4,6 +4,7 @@ using NetSchool.Common.Exceptions;
 using NetSchool.Common.Security;
 using NetSchool.Services.CardCollections;
 using NetSchool.Services.CardCollections.CardCollections;
+using NetSchool.Services.CardCollections.Models;
 using NetSchool.Services.Logger;
 
 namespace NetSchool.Api.Controllers
@@ -30,6 +31,14 @@ namespace NetSchool.Api.Controllers
             var result = await _cartCollectionService.GetAll();
 
             return result;
+        }
+
+        [HttpGet("{page:int}/{pageSize:int}")]
+        //[Authorize(AppScopes.CollectionsRead)]
+        public async Task<IActionResult> Get([FromRoute] PageParameters parameters)
+        {
+            var result = await _cartCollectionService.GetPage(parameters);
+            return Ok(result);
         }
 
         [HttpGet("{id:Guid}")]
