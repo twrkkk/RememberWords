@@ -2,9 +2,9 @@
 
 namespace NetSchool.Web.Services.CardCollectionActions;
 
-public abstract class CardCollectionActions
+public abstract class CardCollectionActionsBase
 {
-    protected CardCollectionActions()
+    protected CardCollectionActionsBase()
     {
         collection = new();
         collection.Cards = new List<CardModel>();

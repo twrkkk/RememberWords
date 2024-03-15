@@ -5,12 +5,12 @@ namespace NetSchool.Services.CardCollections.CardCollections;
 
 public interface ICartCollectionService
 {
-    Task<IEnumerable<CardCollectionModel>> GetAll();
-    Task<IEnumerable<CardCollectionModel>> GetAllWithName(string name);
-    Task<CardCollectionModel> Get(Guid id);
-    Task<IEnumerable<CardCollectionModel>> GetPage(PageParameters parameters);
-    Task<CardCollectionModel> Create(CreateModel model);
-    Task Update(Guid id, UpdateModel model);
-    Task Delete(Guid id);
-    Task SendEmailForSubscribers(User user, CardCollection newCollection);
+    Task<IEnumerable<CardCollectionModel>> GetAllAsync();
+    Task<IEnumerable<CardCollectionModel>> GetAllWithNameAsync(string name);
+    Task<CardCollectionModel> GetAsync(Guid id);
+    Task<IEnumerable<CardCollectionModel>> GetPageAsync(PageParameters parameters);
+    Task<CardCollectionModel> CreateAsync(CreateModel model);
+    Task UpdateAsync(Guid id, UpdateModel model);
+    Task DeleteAsync(Guid id);
+    Task SendEmailForSubscribersAsync(User user, CardCollection newCollection);
 }

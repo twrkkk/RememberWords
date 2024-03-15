@@ -35,12 +35,12 @@ public class UserAccountService : IUserAccountService
         this.action = action;
     }
 
-    public async Task<bool> IsEmpty()
+    public async Task<bool> IsEmptyAsync()
     {
         return !(await userManager.Users.AnyAsync());
     }
 
-    public async Task<UserAccountModel> Create(RegisterUserAccountModel model)
+    public async Task<UserAccountModel> CreateAsync(RegisterUserAccountModel model)
     {
         registerUserAccountModelValidator.Check(model);
 
@@ -65,12 +65,12 @@ public class UserAccountService : IUserAccountService
         if (!result.Succeeded)
             throw new ProcessException($"Creating user account is wrong. {string.Join(", ", result.Errors.Select(s => s.Description))}");
 
-        await SendEmailConfirmation(user);
+        await SendEmailConfirmationAsync(user);
 
         return mapper.Map<UserAccountModel>(user);
     }
 
-    public async Task SendEmailConfirmation(User user)
+    public async Task SendEmailConfirmationAsync(User user)
     {
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -89,10 +89,10 @@ public class UserAccountService : IUserAccountService
             Content = string.Format("Memorizing team thanks you for registation!\nTo confirm email, click <a href='{0}'>here</a>", callbackUrl)
         };
 
-        await action.SendEmailConfirmation(email);
+        await action.SendEmailConfirmationAsync(email);
     }
 
-    public async Task ConfirmEmail(EmailConfirmModel model)
+    public async Task ConfirmEmailAsync(EmailConfirmModel model)
     {
         var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -102,7 +102,7 @@ public class UserAccountService : IUserAccountService
         await userManager.ConfirmEmailAsync(user, model.Code);
     }
 
-    public async Task SendEmailToChangePassword(ResetPasswordModel model)
+    public async Task SendEmailToChangePasswordAsync(ResetPasswordModel model)
     {
         var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -126,10 +126,10 @@ public class UserAccountService : IUserAccountService
             Content = string.Format("To reset password on Memorizing, click <a href='{0}'>here</a>", callbackUrl)
         };
 
-        await action.SendResetPasswordEmail(email);
+        await action.SendResetPasswordEmailAsync(email);
     }
 
-    public async Task ChangePassword(ChangePasswordModel model)
+    public async Task ChangePasswordAsync(ChangePasswordModel model)
     {
         var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -139,7 +139,7 @@ public class UserAccountService : IUserAccountService
         await userManager.ResetPasswordAsync(user, model.Code, model.NewPassword);
     }
 
-    public async Task<UserAccountModel> Get(Guid id)
+    public async Task<UserAccountModel> GetAsync(Guid id)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
 
@@ -163,15 +163,15 @@ public class UserAccountService : IUserAccountService
 
         await userManager.UpdateAsync(user);
 
-        await SendEmailConfirmation(user);
+        await SendEmailConfirmationAsync(user);
     }
 
-    public async Task Subscribe(SubscribeModel model)
+    public async Task SubscribeAsync(SubscribeModel model)
     {
         await SubscriptionHandling(model, true);
     }
 
-    public async Task Unsubscribe(SubscribeModel model)
+    public async Task UnsubscribeAsync(SubscribeModel model)
     {
         await SubscriptionHandling(model, false);
     }
@@ -199,6 +199,5 @@ public class UserAccountService : IUserAccountService
         }
 
         await userManager.UpdateAsync(user);
-        //await userManager.UpdateAsync(following);
     }
 }

@@ -33,7 +33,7 @@ public class CartCollectionService : ICartCollectionService
         this.userManager = userManager;
     }
 
-    public async Task<IEnumerable<CardCollectionModel>> GetAll()
+    public async Task<IEnumerable<CardCollectionModel>> GetAllAsync()
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -47,7 +47,7 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
-    public async Task<IEnumerable<CardCollectionModel>> GetAllWithName(string name)
+    public async Task<IEnumerable<CardCollectionModel>> GetAllWithNameAsync(string name)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -62,7 +62,7 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
-    public async Task<IEnumerable<CardCollectionModel>> GetPage(PageParameters parameters)
+    public async Task<IEnumerable<CardCollectionModel>> GetPageAsync(PageParameters parameters)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -78,7 +78,7 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
-    public async Task<CardCollectionModel> Get(Guid id)
+    public async Task<CardCollectionModel> GetAsync(Guid id)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -95,7 +95,7 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
-    public async Task<CardCollectionModel> Create(CreateModel model)
+    public async Task<CardCollectionModel> CreateAsync(CreateModel model)
     {
         await _createModelValidator.CheckAsync(model);
 
@@ -112,12 +112,12 @@ public class CartCollectionService : ICartCollectionService
 
         await context.SaveChangesAsync();
 
-        await SendEmailForSubscribers(user, collection);
+        await SendEmailForSubscribersAsync(user, collection);
 
         return _mapper.Map<CardCollectionModel>(collection);
     }
 
-    public async Task Delete(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -131,7 +131,7 @@ public class CartCollectionService : ICartCollectionService
         await context.SaveChangesAsync();
     }
 
-    public async Task Update(Guid id, UpdateModel model)
+    public async Task UpdateAsync(Guid id, UpdateModel model)
     {
         await _updateModelValidator.CheckAsync(model);
 
@@ -174,7 +174,7 @@ public class CartCollectionService : ICartCollectionService
         await context.SaveChangesAsync();
     }
 
-    public async Task SendEmailForSubscribers(User user, CardCollection newCollection)
+    public async Task SendEmailForSubscribersAsync(User user, CardCollection newCollection)
     {
         var uriBuilder = new UriBuilder("https", "localhost", 7165, "/show-collection");
         var query = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -192,7 +192,7 @@ public class CartCollectionService : ICartCollectionService
                 Content = string.Format("{0} created a new card collection on Memorizing, to show it click <a href='{1}'>here</a>", user.UserName, callbackUrl)
             };
 
-            await action.SendEmailForSubscribers(email);
+            await action.SendEmailForSubscribersAsync(email);
         }
     }
 }

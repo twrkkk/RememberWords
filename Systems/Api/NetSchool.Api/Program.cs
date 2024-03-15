@@ -1,7 +1,7 @@
 using Coravel;
 using NetSchool.Api;
 using NetSchool.Api.Configuration;
-using NetSchool.Api.Filters;
+using NetSchool.Services.Filters;
 using NetSchool.Context;
 using NetSchool.Context.Seeder;
 using NetSchool.Services.Logger;
@@ -20,11 +20,7 @@ var services = builder.Services;
 
 services.AddAppDbContext();
 
-services.AddControllers(options =>
-{
-    options.Filters.Add<EntityNotFoundExceptionFilter>();
-});
-
+services.AddFilters();
 services.AddHttpContextAccessor();
 services.AddRazorPages();
 services.AddAppAutoMappers();
@@ -39,7 +35,6 @@ services.AddAppDeleteExpiredCollectionsScheduler();
 services.AddAppAuth(identitySettings);
 
 services.RegisterServices();
-
 
 var app = builder.Build();
 

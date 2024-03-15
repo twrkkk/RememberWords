@@ -69,10 +69,10 @@ public static class DbSeeder
 
         var userAccountService = scope.ServiceProvider.GetService<IUserAccountService>();
 
-        if (!(await userAccountService.IsEmpty()))
+        if (!(await userAccountService.IsEmptyAsync()))
             return;
 
-        await userAccountService.Create(new RegisterUserAccountModel()
+        await userAccountService.CreateAsync(new RegisterUserAccountModel()
         {
             UserName = settings.Init.Administrator.Email,
             Email = settings.Init.Administrator.Email,

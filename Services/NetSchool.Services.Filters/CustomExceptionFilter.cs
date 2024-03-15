@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using NetSchool.Common.Exceptions;
 using NetSchool.Services.Logger;
 
-namespace NetSchool.Api.Filters;
+namespace NetSchool.Services.Filters;
 
-public class EntityNotFoundExceptionFilter : IExceptionFilter
+public class CustomExceptionFilter : IExceptionFilter
 {
     private readonly IAppLogger _logger;
 
-    public EntityNotFoundExceptionFilter(IAppLogger logger)
+    public CustomExceptionFilter(IAppLogger logger)
     {
         _logger = logger;
     }

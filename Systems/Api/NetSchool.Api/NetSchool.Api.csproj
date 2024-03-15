@@ -33,6 +33,7 @@
 		<ProjectReference Include="..\..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Actions\NetSchool.Services.Actions.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.CardCollections\NetSchool.Services.CardCollections.csproj" />
+		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Filters\NetSchool.Services.Filters.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Logger\NetSchool.Services.Logger.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.RabbitMq\NetSchool.Services.RabbitMq.csproj" />
 		<ProjectReference Include="..\..\..\Services\NetSchool.Services.Scheduler\NetSchool.Services.Scheduler.csproj" />

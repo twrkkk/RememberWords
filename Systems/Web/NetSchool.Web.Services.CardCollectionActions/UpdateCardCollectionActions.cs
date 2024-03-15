@@ -3,7 +3,7 @@ using NetSchool.Web.Services.CardCollections;
 
 namespace NetSchool.Web.Services.CardCollectionActions
 {
-    public class UpdateCardCollectionActions : CardCollectionActions
+    public class UpdateCardCollectionActions : CardCollectionActionsBase
     {
         private readonly ICardCollectionsService cardService;
         private UpdateModel updateModel;

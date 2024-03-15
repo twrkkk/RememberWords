@@ -5,7 +5,6 @@ using NetSchool.Services.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 using NetSchool.Services.UserAccount.Models;
 using NetSchool.Services.UserAccount.UserAccount.Models;
-using NetSchool.Services.UserAccount.Models;
 
 [ApiController]
 [ApiVersion("1.0")]
@@ -27,35 +26,35 @@ public class AccountsController : ControllerBase
     [HttpPost("")]
     public async Task<UserAccountModel> Register([FromBody] RegisterUserAccountModel request)
     {
-        var user = await userAccountService.Create(request);
+        var user = await userAccountService.CreateAsync(request);
         return user;
     }
 
     [HttpGet("")]
     public async Task<UserAccountModel> Get([FromQuery] Guid id)
     {
-        var user = await userAccountService.Get(id);
+        var user = await userAccountService.GetAsync(id);
         return user;
     }
 
     [HttpPost("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmail([FromBody] EmailConfirmModel model)
     {
-        await userAccountService.ConfirmEmail(model);
+        await userAccountService.ConfirmEmailAsync(model);
         return Ok();
     }
 
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
     {
-        await userAccountService.SendEmailToChangePassword(model);
+        await userAccountService.SendEmailToChangePasswordAsync(model);
         return Ok();
     }
 
     [HttpPost("ChangePassword")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
     {
-        await userAccountService.ChangePassword(model);
+        await userAccountService.ChangePasswordAsync(model);
         return Ok();
     }
 
@@ -69,14 +68,14 @@ public class AccountsController : ControllerBase
     [HttpPost("Subscribe")]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeModel model)
     {
-        await userAccountService.Subscribe(model);
+        await userAccountService.SubscribeAsync(model);
         return Ok();
     }
 
     [HttpPost("Unsubscribe")]
     public async Task<IActionResult> Unsubscribe([FromBody] SubscribeModel model)
     {
-        await userAccountService.Unsubscribe(model);
+        await userAccountService.UnsubscribeAsync(model);
         return Ok();
     }
 }

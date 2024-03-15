@@ -6,26 +6,14 @@ namespace NetSchool.Services.UserAccount;
 
 public interface IUserAccountService
 {
-    Task<bool> IsEmpty();
-
-    /// <summary>
-    /// Create user account
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    Task<UserAccountModel> Create(RegisterUserAccountModel model);
-    Task SendEmailConfirmation(User user);
-    Task ConfirmEmail(EmailConfirmModel model);
-    Task SendEmailToChangePassword(ResetPasswordModel model);
-    Task ChangePassword(ChangePasswordModel model);
-    Task<UserAccountModel> Get(Guid id);
+    Task<bool> IsEmptyAsync();
+    Task<UserAccountModel> CreateAsync(RegisterUserAccountModel model);
+    Task SendEmailConfirmationAsync(User user);
+    Task ConfirmEmailAsync(EmailConfirmModel model);
+    Task SendEmailToChangePasswordAsync(ResetPasswordModel model);
+    Task ChangePasswordAsync(ChangePasswordModel model);
+    Task<UserAccountModel> GetAsync(Guid id);
     Task EditUserProfileAsync(EditProfileModel model);
-    Task Subscribe(SubscribeModel model);
-    Task Unsubscribe(SubscribeModel model);
-
-
-
-    // .. Также здесь можно разместить методы для изменения данных учетной записи, восстановления и смены пароля, подтверждения электронной почты, установки телефона и его подтверждения и т.д.
-    // .. Но это уже на самостоятельно.
-    // .. Удачи! Я в вас верю!  :)
+    Task SubscribeAsync(SubscribeModel model);
+    Task UnsubscribeAsync(SubscribeModel model);
 }

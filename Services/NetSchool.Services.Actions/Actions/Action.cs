@@ -14,17 +14,17 @@ public class Action : IAction
         this.rabbitMq = rabbitMq;
     }
 
-    public async Task SendEmailConfirmation(EmailModel model)
+    public async Task SendEmailConfirmationAsync(EmailModel model)
     {
         await rabbitMq.PushAsync(QueueNames.EMAIL_CONFIRMATION, model);
     }
 
-    public async Task SendEmailForSubscribers(EmailModel model)
+    public async Task SendEmailForSubscribersAsync(EmailModel model)
     {
         await rabbitMq.PushAsync(QueueNames.SUBSCRIBERS_NOTIFICATION, model);
     }
 
-    public async Task SendResetPasswordEmail(EmailModel model)
+    public async Task SendResetPasswordEmailAsync(EmailModel model)
     {
         await rabbitMq.PushAsync(QueueNames.RESET_PASSWORD, model);
     }

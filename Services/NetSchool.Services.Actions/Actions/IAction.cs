@@ -4,7 +4,7 @@ namespace NetSchool.Services.Actions;
 
 public interface IAction
 {
-    Task SendEmailConfirmation(EmailModel model);
-    Task SendResetPasswordEmail(EmailModel model);
-    Task SendEmailForSubscribers(EmailModel model);
+    Task SendEmailConfirmationAsync(EmailModel model);
+    Task SendResetPasswordEmailAsync(EmailModel model);
+    Task SendEmailForSubscribersAsync(EmailModel model);
 }

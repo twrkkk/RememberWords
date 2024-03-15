@@ -4,7 +4,7 @@ using NetSchool.Web.Services.CardCollections;
 
 namespace NetSchool.Web.Services.CardCollectionActions
 {
-    public class CreateCardCollectionActions : CardCollectionActions
+    public class CreateCardCollectionActions : CardCollectionActionsBase
     {
         private readonly AuthenticationStateProvider authProvider;
         private readonly ICardCollectionsService cardService;
