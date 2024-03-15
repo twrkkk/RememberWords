@@ -6,6 +6,7 @@ namespace NetSchool.Services.CardCollections.CardCollections;
 public interface ICartCollectionService
 {
     Task<IEnumerable<CardCollectionModel>> GetAll();
+    Task<IEnumerable<CardCollectionModel>> GetAllWithName(string name);
     Task<CardCollectionModel> Get(Guid id);
     Task<IEnumerable<CardCollectionModel>> GetPage(PageParameters parameters);
     Task<CardCollectionModel> Create(CreateModel model);

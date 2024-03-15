@@ -25,7 +25,7 @@
     <ToolBarContent>
         <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCollection">Add</MudButton>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+        <MudTextField Immediate="true" @bind-Value="searchString" OnKeyDown="OnEnterDown" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
@@ -57,7 +57,10 @@
     {
         try
         {
-            collections = await CardCollectionsService.GetAll();
+            if (string.IsNullOrEmpty(searchString))
+                collections = await CardCollectionsService.GetAll();
+            else
+                collections = await CardCollectionsService.GetAllWithName(searchString);
         }
         catch (Exception ex)
         {
@@ -115,5 +118,14 @@
     private void ShowCollection(Guid id)
     {
         NavManager.NavigateTo($"/show-collection?collectionId={id}");
+    }
+
+    private async Task OnEnterDown(KeyboardEventArgs args)
+    {
+        if (args.Key is not "Enter" or "NumpadEnter")
+            return;
+
+        await ReloadData();
+        StateHasChanged();
     }
 }

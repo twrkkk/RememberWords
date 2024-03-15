@@ -33,6 +33,15 @@ namespace NetSchool.Api.Controllers
             return result;
         }
 
+        [HttpGet("{name}")]
+        //[Authorize(AppScopes.CollectionsRead)]
+        public async Task<IEnumerable<CardCollectionModel>> GetAllWithName([FromRoute] string name)
+        {
+            var result = await _cartCollectionService.GetAllWithName(name);
+
+            return result;
+        }
+
         [HttpGet("{page:int}/{pageSize:int}")]
         //[Authorize(AppScopes.CollectionsRead)]
         public async Task<IActionResult> Get([FromRoute] PageParameters parameters)

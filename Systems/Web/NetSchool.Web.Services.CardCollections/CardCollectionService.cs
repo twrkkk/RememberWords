@@ -25,6 +25,19 @@ public class CardCollectionService : ICardCollectionsService
         return await response.Content.ReadFromJsonAsync<IEnumerable<CardCollectionModel>>() ?? new List<CardCollectionModel>();
     }
 
+    public async Task<IEnumerable<CardCollectionModel>> GetAllWithName(string name)
+    {
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.GetAsync($"v1/cardCollections/{name}");
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            throw new Exception(content);
+        }
+
+        return await response.Content.ReadFromJsonAsync<IEnumerable<CardCollectionModel>>() ?? new List<CardCollectionModel>();
+    }
+
     public async Task<IEnumerable<CardCollectionModel>> GetPage(int page, int pageSize)
     {
         var httpClient = _httpClientFactory.CreateClient("delegatingClient");

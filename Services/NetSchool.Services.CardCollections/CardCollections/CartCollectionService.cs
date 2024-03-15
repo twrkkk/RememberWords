@@ -47,6 +47,21 @@ public class CartCollectionService : ICartCollectionService
         return result;
     }
 
+    public async Task<IEnumerable<CardCollectionModel>> GetAllWithName(string name)
+    {
+        using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        var collections = await context.CardCollections
+            .Include(x => x.User)
+            .Include(x => x.Cards)
+            .Where(x=>x.Name.ToLower().Contains(name.ToLower()))
+            .ToListAsync();
+
+        var result = _mapper.Map<IEnumerable<CardCollectionModel>>(collections);
+
+        return result;
+    }
+
     public async Task<IEnumerable<CardCollectionModel>> GetPage(PageParameters parameters)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
