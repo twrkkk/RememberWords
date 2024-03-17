@@ -67,7 +67,7 @@ else
                 NavManager.NavigateTo("/");
                 return;
             }
-            user = await accountService.Get(new Guid(userId));
+            user = await accountService.GetAsync(new Guid(userId));
             var watcherId = new Guid(await accountService.GetUserIdAsync()); // person who opened this profile
             Subscribed = user.Followers.Any(x => x.Id == watcherId);
         }
@@ -82,7 +82,7 @@ else
         try
         {
             SubscribeButtonDisabled = true;
-            await accountService.Subscribe(new Guid(userId));
+            await accountService.SubscribeAsync(new Guid(userId));
             Subscribed = true;
             SubscribeButtonDisabled = false;
         }
@@ -97,7 +97,7 @@ else
         try
         {
             SubscribeButtonDisabled = true;
-            await accountService.Unsubscribe(new Guid(userId));
+            await accountService.UnsubscribeAsync(new Guid(userId));
             Subscribed = false;
             SubscribeButtonDisabled = false;
         }

@@ -1,5 +1,6 @@
 ﻿@page "/registration"
 @using System.ComponentModel.DataAnnotations
+@using NetSchool.Web.Components
 @using NetSchool.Web.Pages.Auth.Models
 @using NetSchool.Web.Pages.Auth.Services
 @using NetSchool.Web.Pages.Registration.Models
@@ -8,6 +9,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IRegistrationService RegistrationService
+@inject IDialogService DialogService
 
 <MudGrid Justify="Justify.Center" Class="pa-10">
     <MudItem xs="7" sm="4">
@@ -94,7 +96,19 @@
         try
         {
             await RegistrationService.Create(model);
-            NavigationManager.NavigateTo("/EmailConfirmNotification");
+
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", "Your account successfully created. We are sent a link on your email to confirm your email address");
+            parameters.Add("ButtonText", "Ok");
+            parameters.Add("Color", Color.Error);
+            parameters.Add("ShowCancelButton", false);
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+            var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Confirm email", parameters, options);
+            var result = await dialog.Result;
+
+            NavigationManager.NavigateTo("/login");
         }
         catch (Exception ex)
         {

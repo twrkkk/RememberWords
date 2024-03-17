@@ -1,12 +1,14 @@
 ﻿@page "/profile"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using NetSchool.Web.Components
 @using NetSchool.Web.Entities.User
 @using NetSchool.Web.Pages.Account.Services
 @using NetSchool.Web.Providers
 @inject NavigationManager NavManager
 @inject IAccountService accountService
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @attribute [Authorize]
 @layout MainLayout
 
@@ -38,16 +40,19 @@ else
                 <MudItem xs="12" md="6">
                     <MudText Typo="Typo.subtitle1" Margin="Margin.Top">@user.UserName</MudText>
                         <MudGrid>
+                            @if (user.EmailConfirmed)
+                        {
                             <MudItem xs="6" md="1">
-                                @if (user.EmailConfirmed)
-                            {
                                 <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" />
-                            }
-                            else
-                            {
+                            </MudItem>
+                        }
+                        else
+                        {
+                            <MudItem xs="6" md="2">
                                 <MudIcon Icon="@Icons.Material.Filled.WarningAmber" />
-                            }
-                        </MudItem>
+                                <MudIconButton Title="Send email confirmation" Icon="@Icons.Material.Filled.Email" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="SendEmailConfirmation" />
+                            </MudItem>
+                        }
 
                         <MudItem xs="6" md="5">
                             <MudText Typo="Typo.subtitle1">@user.Email</MudText>
@@ -62,10 +67,6 @@ else
             </MudGrid>
         </MudCardContent>
     </MudCard>
-
-
-
-
 }
 
 
@@ -77,7 +78,7 @@ else
         try
         {
             var userId = await accountService.GetUserIdAsync();
-            user = await accountService.Get(new Guid(userId));
+            user = await accountService.GetAsync(new Guid(userId));
         }
         catch (Exception ex)
         {
@@ -93,5 +94,28 @@ else
     private void OpenCollection(Guid collectionId)
     {
         NavManager.NavigateTo($"/show-collection?collectionId={collectionId}");
+    }
+
+    private async Task SendEmailConfirmation()
+    {
+        try
+        {
+            await accountService.SendEmailConfirmationAsync();
+
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", "We are sent a link on your email to confirm your email address");
+            parameters.Add("ButtonText", "Ok");
+            parameters.Add("Color", Color.Error);
+            parameters.Add("ShowCancelButton", false);
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+            var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Confirm email", parameters, options);
+            var result = await dialog.Result;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
     }
 }

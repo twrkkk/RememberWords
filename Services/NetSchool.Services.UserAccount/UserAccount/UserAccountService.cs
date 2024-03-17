@@ -70,6 +70,19 @@ public class UserAccountService : IUserAccountService
         return mapper.Map<UserAccountModel>(user);
     }
 
+    public async Task SendEmailConfirmationAsync(UserIdModel model)
+    {
+        if (model == null || model.userId == Guid.Empty)
+            return;
+
+        var user = await userManager.FindByIdAsync(model.userId.ToString());
+
+        if (user == null)
+            throw new EntityNotFoundException($"User (Id = {model.userId}) not found.");
+
+        await SendEmailConfirmationAsync(user);
+    }
+
     public async Task SendEmailConfirmationAsync(User user)
     {
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);

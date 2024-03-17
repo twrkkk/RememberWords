@@ -21,7 +21,7 @@ namespace NetSchool.Web.Pages.Account.Services
             _authProvider = authProvider;
         }
 
-        public async Task ChangePassword(ChangePasswordModel model)
+        public async Task ChangePasswordAsync(ChangePasswordModel model)
         {
             var requestContent = JsonContent.Create(model);
             var httpClient = _httpClientFactory.CreateClient("delegatingClient");
@@ -34,7 +34,7 @@ namespace NetSchool.Web.Pages.Account.Services
             }
         }
 
-        public async Task ConfirmEmail(string userEmail, string code)
+        public async Task ConfirmEmailAsync(string userEmail, string code)
         {
             var requestContent = JsonContent.Create(new EmailConfirmModel { Email = userEmail, Code = code });
             var httpClient = _httpClientFactory.CreateClient("delegatingClient");
@@ -60,7 +60,7 @@ namespace NetSchool.Web.Pages.Account.Services
             }
         }
 
-        public async Task<UserAccountModel> Get(Guid id)
+        public async Task<UserAccountModel> GetAsync(Guid id)
         {
             var httpClient = _httpClientFactory.CreateClient("delegatingClient");
             var response = await httpClient.GetAsync($"v1/accounts?id={id}");
@@ -85,7 +85,21 @@ namespace NetSchool.Web.Pages.Account.Services
             return userId;
         }
 
-        public async Task SendEmailToChangePassword(string email)
+        public async Task SendEmailConfirmationAsync()
+        {
+            var userId = await GetUserIdAsync();
+            var requestContent = JsonContent.Create(new UserIdModel { userId = new Guid(userId) });
+            var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+            var response = await httpClient.PostAsync("v1/accounts/SendEmailConfirmation", requestContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                throw new Exception(content);
+            }
+        }
+
+        public async Task SendEmailToChangePasswordAsync(string email)
         {
             var requestContent = JsonContent.Create(new ResetPasswordModel { Email = email });
             var httpClient = _httpClientFactory.CreateClient("delegatingClient");
@@ -98,12 +112,12 @@ namespace NetSchool.Web.Pages.Account.Services
             }
         }
 
-        public async Task Subscribe(Guid followingId)
+        public async Task SubscribeAsync(Guid followingId)
         {
             await SubscriptionHandling(followingId, true);
         }
 
-        public async Task Unsubscribe(Guid followingId)
+        public async Task UnsubscribeAsync(Guid followingId)
         {
             await SubscriptionHandling(followingId, false);
         }

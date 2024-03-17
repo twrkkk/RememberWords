@@ -7,12 +7,13 @@ namespace NetSchool.Web.Pages.Account.Services;
 
 public interface IAccountService
 {
-    Task ConfirmEmail(string email, string code);
-    Task ChangePassword(ChangePasswordModel model);
-    Task SendEmailToChangePassword(string email);
-    Task<UserAccountModel> Get(Guid id);
+    Task ConfirmEmailAsync(string email, string code);
+    Task ChangePasswordAsync(ChangePasswordModel model);
+    Task SendEmailToChangePasswordAsync(string email);
+    Task SendEmailConfirmationAsync();
+    Task<UserAccountModel> GetAsync(Guid id);
     Task<string> GetUserIdAsync();
     Task EditUserProfileAsync(EditProfileModel model);
-    Task Subscribe(Guid followingId);
-    Task Unsubscribe(Guid followingId);
+    Task SubscribeAsync(Guid followingId);
+    Task UnsubscribeAsync(Guid followingId);
 }

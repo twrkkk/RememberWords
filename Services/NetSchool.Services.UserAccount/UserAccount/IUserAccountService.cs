@@ -9,6 +9,7 @@ public interface IUserAccountService
     Task<bool> IsEmptyAsync();
     Task<UserAccountModel> CreateAsync(RegisterUserAccountModel model);
     Task SendEmailConfirmationAsync(User user);
+    Task SendEmailConfirmationAsync(UserIdModel model);
     Task ConfirmEmailAsync(EmailConfirmModel model);
     Task SendEmailToChangePasswordAsync(ResetPasswordModel model);
     Task ChangePasswordAsync(ChangePasswordModel model);

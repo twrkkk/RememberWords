@@ -38,7 +38,7 @@ else
         try
         {
             var userId = await accountService.GetUserIdAsync();
-            user = await accountService.Get(new Guid(userId));
+            user = await accountService.GetAsync(new Guid(userId));
         }
         catch (Exception ex)
         {
