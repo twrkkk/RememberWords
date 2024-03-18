@@ -14,6 +14,8 @@ using System.Web;
 using MimeKit;
 using System.Net.Mail;
 using NetSchool.Services.UserAccount.UserAccount.Models;
+using NetSchool.Settings;
+using NetSchool.Services.Settings;
 
 public class UserAccountService : IUserAccountService
 {
@@ -87,20 +89,12 @@ public class UserAccountService : IUserAccountService
     {
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        var uriBuilder = new UriBuilder("https", "localhost", 7165, "/ConfirmEmail");
-        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-        query["userEmail"] = user.Email;
-        query["code"] = code;
-        uriBuilder.Query = query.ToString();
+        var webClient = Settings.Load<WebClientSettings>("WebClient");
+        var callbackUrl = BuildCallbackUrl($"{webClient.BaseUrl}/ConfirmEmail", user.Email, code);
 
-        var callbackUrl = uriBuilder.ToString();
-
-        var email = new EmailModel
-        {
-            To = user.Email,
-            Subject = "Memorizing Email Confirmation",
-            Content = string.Format("Memorizing team thanks you for registation!\nTo confirm email, click <a href='{0}'>here</a>", callbackUrl)
-        };
+        var message = Settings.Load<EmailTemplate>("EmailConfirmation");
+        var content = string.Format(message.Message, callbackUrl);
+        var email = BuildEmail(user.Email, message.Subject, content);
 
         await action.SendEmailConfirmationAsync(email);
     }
@@ -124,22 +118,34 @@ public class UserAccountService : IUserAccountService
 
         var code = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        var uriBuilder = new UriBuilder("https", "localhost", 7165, "/change-password");
-        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-        query["userEmail"] = user.Email;
-        query["code"] = code;
-        uriBuilder.Query = query.ToString();
+        var webClient = Settings.Load<WebClientSettings>("WebClient");
+        var callbackUrl = BuildCallbackUrl($"{webClient.BaseUrl}/change-password", user.Email, code);
 
-        var callbackUrl = uriBuilder.ToString();
-
-        var email = new EmailModel
-        {
-            To = user.Email,
-            Subject = "Memorizing Change Password",
-            Content = string.Format("To reset password on Memorizing, click <a href='{0}'>here</a>", callbackUrl)
-        };
+        var message = Settings.Load<EmailTemplate>("ChangePasswordEmail");
+        var content = string.Format(message.Message, callbackUrl);
+        var email = BuildEmail(user.Email, message.Subject, content);
 
         await action.SendResetPasswordEmailAsync(email);
+    }
+
+    private string BuildCallbackUrl(string baseUrl, string email, string code)
+    {
+        var uriBuilder = new UriBuilder(baseUrl);
+        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        query["userEmail"] = email;
+        query["code"] = code;
+        uriBuilder.Query = query.ToString();
+        return uriBuilder.ToString();
+    }
+
+    private EmailModel BuildEmail(string to, string subject, string content)
+    {
+        return new EmailModel
+        {
+            To = to,
+            Subject = subject,
+            Content = content
+        };
     }
 
     public async Task ChangePasswordAsync(ChangePasswordModel model)

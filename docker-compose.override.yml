@@ -39,7 +39,7 @@ services:
    networks:
      - shared_netschool_net
    ports:
-     - "10001:80"
+     - "10001:8080"
    env_file:
      - env.worker
 
@@ -47,7 +47,7 @@ services:
   #  networks:
   #    - shared_netschool_net
   #  ports:
-  #    - "10002:80"
+  #    - "10002:8080"
   #  env_file:
   #    - env.worker
 
@@ -58,6 +58,10 @@ services:
       - shared_netschool_net
     env_file:
       - env.identity
+
+  memorizing_blazorapp:
+      ports:
+        - 7165:80
 
 networks:
   shared_netschool_net:

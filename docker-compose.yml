@@ -42,6 +42,14 @@ services:
   #    context: .
   #    dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
   #  depends_on:
-  #    - netschool_postgresql
-  #    - netschool_rabbitmq
-  #    - netschool_api 
+  #    - memorizing_postgresql
+  #    - memorizing_rabbitmq
+  #    - memorizing_api
+
+  memorizing_blazorapp:
+    image: blazorapp
+    build:
+     context: .
+     dockerfile: Systems/Web/NetSchool.Web/Dockerfile
+
+  
