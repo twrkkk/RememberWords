@@ -9,6 +9,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\styles.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Assets\styles.css">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageReference Include="Coravel" Version="5.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />

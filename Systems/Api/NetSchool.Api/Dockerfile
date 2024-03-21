@@ -1,7 +1,6 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-RUN apt-get update && apt-get install -y --allow-unauthenticated apt-utils libc6-dev libxrender1 libfontconfig1 libgdiplus libjpeg62-turbo libfontconfig1 libfreetype6 libxext6 libx11-6 fontconfig zlib1g
 USER app
 WORKDIR /app
 EXPOSE 8080

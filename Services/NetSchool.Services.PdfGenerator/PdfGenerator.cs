@@ -1,44 +1,49 @@
-﻿using DinkToPdf;
-using DinkToPdf.Contracts;
+﻿using iText.Html2pdf;
+using iText.IO.Source;
+using iText.Kernel.Geom;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using NetSchool.Context.Entities;
 using NetSchool.Services.PdfGenerator.Templates;
+using System.Text;
 
 namespace NetSchool.Services.PdfGenerator;
 
 public class PdfGenerator
 {
-    private readonly IConverter _converter;
-
-    public PdfGenerator(IConverter converter)
-    {
-        _converter = converter;
-    }
-
     public byte[] CardCollectionToPdf(CardCollection cardCollection)
     {
-        var globalSettings = new GlobalSettings
-        {
-            ColorMode = ColorMode.Color,
-            Orientation = Orientation.Portrait,
-            PaperSize = PaperKind.A4,
-            Margins = new MarginSettings { Top = 10 },
-            DocumentTitle = cardCollection.Name
-        };
+        var html = HtmlToPdfTemplates.GetHTMLCardCollection(cardCollection);
 
-        var objectSettings = new ObjectSettings
+        string cssContent;
+        using (var reader = new StreamReader(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Assets", "styles.css")))
         {
-            PagesCount = true,
-            HtmlContent = HtmlToPdfTemplates.GetHTMLCardCollection(cardCollection),
-            WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "styles.css") },
-            HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = false },
-        };
-        var pdf = new HtmlToPdfDocument()
-        {
-            GlobalSettings = globalSettings,
-            Objects = { objectSettings }
-        };
+            cssContent = reader.ReadToEnd();
+        }
 
-        var file = _converter.Convert(pdf);
-        return file;
+        using (var ms = new MemoryStream())
+        {
+            using (var doc = new Document())
+            {
+                doc.AddTitle(cardCollection.Name);
+
+                using (var writer = PdfWriter.GetInstance(doc, ms))
+                {
+                    doc.Open();
+
+                    using (var msCss = new MemoryStream(Encoding.UTF8.GetBytes(cssContent)))
+                    {
+                        using (var msHtml = new MemoryStream(Encoding.UTF8.GetBytes((string)html)))
+                        {
+                            iTextSharp.tool.xml.XMLWorkerHelper.GetInstance().ParseXHtml(writer, doc, msHtml, msCss);
+                        }
+                    }
+
+                    doc.Close();
+                }
+            }
+
+            return ms.ToArray();
+        }
     }
 }
