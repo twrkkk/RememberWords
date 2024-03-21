@@ -11,6 +11,7 @@ using NetSchool.Services.CardCollections.Models;
 using NetSchool.Services.EmailSender.Models;
 using System.Runtime.CompilerServices;
 using System.Web;
+using NetSchool.Services.PdfGenerator;
 
 namespace NetSchool.Services.CardCollections.CardCollections;
 
@@ -22,8 +23,9 @@ public class CartCollectionService : ICartCollectionService
     private readonly IModelValidator<UpdateModel> _updateModelValidator;
     private readonly IAction action;
     private readonly UserManager<User> userManager;
+    private readonly PdfGenerator.PdfGenerator pdfGenerator;
 
-    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager)
+    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager, PdfGenerator.PdfGenerator pdfGenerator)
     {
         _dbContextFactory = dbContextFactory;
         _mapper = mapper;
@@ -31,6 +33,7 @@ public class CartCollectionService : ICartCollectionService
         _updateModelValidator = updateModelValidator;
         this.action = action;
         this.userManager = userManager;
+        this.pdfGenerator = pdfGenerator;
     }
 
     public async Task<IEnumerable<CardCollectionModel>> GetAllAsync()
@@ -194,5 +197,13 @@ public class CartCollectionService : ICartCollectionService
 
             await action.SendEmailForSubscribersAsync(email);
         }
+    }
+
+    public async Task<byte[]> CardCollectionToPdfAsync(Guid collectionId)
+    {
+        var collection = await GetAsync(collectionId);
+        var result = _mapper.Map<CardCollection>(collection);
+
+        return pdfGenerator.CardCollectionToPdf(result);
     }
 }

@@ -26,6 +26,12 @@ public class CardCollectionModelProfile : Profile
             .ForMember(dest => dest.Cards, opt => opt.Ignore())
             .ForMember(dest => dest.TimeExpiraton, opt => opt.MapFrom(src => src.TimeExpiration))
             ;
+
+        CreateMap<CardCollectionModel, CardCollection>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.Cards, opt => opt.MapFrom(src=>src.Cards))
+            ;
     }
 
     public class CardCollectionActions : IMappingAction<CardCollection, CardCollectionModel>

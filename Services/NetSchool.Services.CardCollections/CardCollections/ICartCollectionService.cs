@@ -13,4 +13,5 @@ public interface ICartCollectionService
     Task UpdateAsync(Guid id, UpdateModel model);
     Task DeleteAsync(Guid id);
     Task SendEmailForSubscribersAsync(User user, CardCollection newCollection);
+    Task<byte[]> CardCollectionToPdfAsync(Guid collectionId);
 }

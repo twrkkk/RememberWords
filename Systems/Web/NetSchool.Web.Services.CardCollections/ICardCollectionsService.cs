@@ -11,4 +11,5 @@ public interface ICardCollectionsService
     Task Create(CreateModel model);
     Task Update(Guid id, UpdateModel model);
     Task Delete(Guid id);
+    Task<byte[]> CardCollectionToPdfAsync(Guid id);
 }

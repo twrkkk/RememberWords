@@ -55,6 +55,13 @@ namespace NetSchool.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("CollectionToPdf/{collectionId:Guid}")]
+        public async Task<IActionResult> CollectionToPdf([FromRoute] Guid collectionId)
+        {
+            var result = await _cartCollectionService.CardCollectionToPdfAsync(collectionId);
+            return Ok(result);
+        }
+
         [HttpPost("")]
         // [Authorize(AppScopes.CollectionsWrite)]
         public async Task<CardCollectionModel> Create([FromBody] CreateModel request)

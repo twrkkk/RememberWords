@@ -80,7 +80,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.EmailSen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Web.Services.CardCollectionActions", "Systems\Web\NetSchool.Web.Services.CardCollectionActions\NetSchool.Web.Services.CardCollectionActions.csproj", "{1CC84DA3-CEF6-470C-A8E7-C4C920D2F3D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Services.Filters", "Services\NetSchool.Services.Filters\NetSchool.Services.Filters.csproj", "{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Filters", "Services\NetSchool.Services.Filters\NetSchool.Services.Filters.csproj", "{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.PdfGenerator", "Services\NetSchool.Services.PdfGenerator\NetSchool.Services.PdfGenerator.csproj", "{BA944BDC-60AF-468B-87F5-652F2424501F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Services.LoadCustomAssembly", "Services\NetSchool.Services.LoadCustomAssembly\NetSchool.Services.LoadCustomAssembly.csproj", "{575859E8-DD00-4D12-AE21-12E5BD598F05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,6 +188,14 @@ Global
 		{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA944BDC-60AF-468B-87F5-652F2424501F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA944BDC-60AF-468B-87F5-652F2424501F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA944BDC-60AF-468B-87F5-652F2424501F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA944BDC-60AF-468B-87F5-652F2424501F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{575859E8-DD00-4D12-AE21-12E5BD598F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{575859E8-DD00-4D12-AE21-12E5BD598F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{575859E8-DD00-4D12-AE21-12E5BD598F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{575859E8-DD00-4D12-AE21-12E5BD598F05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +232,8 @@ Global
 		{49534B23-81EF-49A9-AA7B-97DCB4ECF26D} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 		{1CC84DA3-CEF6-470C-A8E7-C4C920D2F3D7} = {B033D305-6F98-4E35-9BFE-E7CF99ADF96D}
 		{733553C0-563F-4EEB-ACE0-4F38AB3AFAA3} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{BA944BDC-60AF-468B-87F5-652F2424501F} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
+		{575859E8-DD00-4D12-AE21-12E5BD598F05} = {C560A69B-D4A6-421A-ABF8-E59A10AD4E4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {542EFE5E-3714-4F72-947F-92373A9282F2}

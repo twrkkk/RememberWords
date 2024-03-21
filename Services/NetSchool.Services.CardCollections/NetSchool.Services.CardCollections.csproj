@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Data\NetSchool.Context\NetSchool.Context.csproj" />
 		<ProjectReference Include="..\NetSchool.Services.Actions\NetSchool.Services.Actions.csproj" />
+		<ProjectReference Include="..\NetSchool.Services.PdfGenerator\NetSchool.Services.PdfGenerator.csproj" />
 	</ItemGroup>
 
 </Project>

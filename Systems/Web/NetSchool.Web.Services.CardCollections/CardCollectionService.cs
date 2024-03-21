@@ -100,4 +100,18 @@ public class CardCollectionService : ICardCollectionsService
             throw new Exception(content);
         }
     }
+
+    public async Task<byte[]> CardCollectionToPdfAsync(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.GetAsync($"v1/cardCollections/CollectionToPdf/{id}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            throw new Exception(content);
+        }
+
+        return await response.Content.ReadFromJsonAsync<byte[]>() ?? new byte[0];
+    }
 }

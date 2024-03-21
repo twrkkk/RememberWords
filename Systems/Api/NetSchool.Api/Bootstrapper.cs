@@ -6,6 +6,8 @@ using NetSchool.Services.UserAccount;
 using NetSchool.Api.Settings;
 using NetSchool.Services.RabbitMq;
 using NetSchool.Services.Actions;
+using NetSchool.Services.PdfGenerator;
+using NetSchool.Services.LoadCustomAssembly;
 
 namespace NetSchool.Api;
 
@@ -24,6 +26,8 @@ public static class Bootstrapper
             .AddApiSpecialSettings()
             .AddRabbitMq()
             .AddActions()
+            .AddPdfGenerator()
+            //.AddCustomAssemblyLoader()
             ;
 
         return services;

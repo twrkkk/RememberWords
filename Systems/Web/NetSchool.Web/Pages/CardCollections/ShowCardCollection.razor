@@ -5,11 +5,13 @@
 @using NetSchool.Web.Pages.Account.Services;
 @using Blazored.LocalStorage;
 @using NetSchool.Web.Components;
+@using System.IO
 @inject ICardCollectionsService CardCollectionService
 @inject ISnackbar Snackbar
 @inject IAccountService AccountService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 @layout MainLayout
 
 <MudPaper Elevation="25">
@@ -18,31 +20,32 @@
             <MudSpacer />
             <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary">
                 <div class="menu-item"
-                    <MudSwitch @bind-Value="@Settings.Arrows" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Arrows</MudSwitch>
-                    <MudSwitch @bind-Value="@Settings.Bullets" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Bullets</MudSwitch>
-                    <MudSwitch @bind-Value="@Settings.SwipeGesture" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
-                    <MudSwitch @bind-Value="@Settings.Autocycle" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Auto Cycle</MudSwitch>
-                    <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
-                </div>
+                        <MudSwitch @bind-Value="@Settings.Arrows" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Arrows</MudSwitch>
+                        <MudSwitch @bind-Value="@Settings.Bullets" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Bullets</MudSwitch>
+                        <MudSwitch @bind-Value="@Settings.SwipeGesture" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
+                        <MudSwitch @bind-Value="@Settings.Autocycle" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Auto Cycle</MudSwitch>
+                        <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
+                    </div>
             </MudMenu>
             @if (_showEditCollectionButton)
-            {
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="EditCollection" />
-            }
-        </MudToolBar>
-    </MudPaper>
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="EditCollection" />
+        }
+        <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="GenerateAndDownloadPdf" Title="Download as Pdf"/>
+    </MudToolBar>
+</MudPaper>
 
-    <div style="display: flex; justify-content: center; align-items: center;">
+<div style="display: flex; justify-content: center; align-items: center;">
     <MudCarousel @ref="_carousel" ItemsSource="@_collection.Cards" @bind-SelectedIndex="selectedIndex" Style="width: 60vw; height:60vh;" ShowArrows="Settings.Arrows" ShowBullets="Settings.Bullets" EnableSwipeGesture="Settings.SwipeGesture" AutoCycle="Settings.Autocycle">
-            <ItemTemplate>
-                <div class="d-flex flex-column flex-column justify-center flex-row" style="height:100%; padding-left:25%; padding-right:25%">
-                    <CardViewComponent Front="@context.Front" Reverse="@context.Reverse" />
-                </div>
-            </ItemTemplate>
-        </MudCarousel>
-    </div>
+        <ItemTemplate>
+            <div class="d-flex flex-column flex-column justify-center flex-row" style="height:100%; padding-left:25%; padding-right:25%">
+                <CardViewComponent Front="@context.Front" Reverse="@context.Reverse" />
+            </div>
+        </ItemTemplate>
+    </MudCarousel>
+</div>
 
-    <br />
+<br />
 
 @code {
     private const string CollectionViewSettingsKey = "CollectionViewSettings";
@@ -79,7 +82,7 @@
             _collection = await CardCollectionService.Get(new Guid(collectionId));
             _collection.Cards?.Shuffle();
             var userId = await AccountService.GetUserIdAsync();
-            _showEditCollectionButton = userId == _collection.UserId.ToString(); // show edit collection button if user is creator of collection 
+            _showEditCollectionButton = userId == _collection.UserId.ToString(); // show edit collection button if user is creator of collection
             await LoadViewSettings();
         }
         catch (Exception ex)
@@ -113,7 +116,38 @@
     {
         Settings = await LocalStorage.GetItemAsync<ViewSettings>(CollectionViewSettingsKey) ?? new ViewSettings();
     }
+
+    private async Task GenerateAndDownloadPdf()
+    {
+        var binaryPdf = await CardCollectionService.CardCollectionToPdfAsync(_collection.Id);
+
+        await JSRuntime.InvokeVoidAsync("saveAsFile", $"Memorizing {_collection.Name} collection.pdf", Convert.ToBase64String(binaryPdf));
+    }
 }
+
+<script type="text/javascript">
+    function saveAsFile(filename, bytesBase64) {
+        if (navigator.msSaveBlob) {
+            //Download document in Edge browser
+            var data = window.atob(bytesBase64);
+            var bytes = new Uint8Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                bytes[i] = data.charCodeAt(i);
+            }
+            var blob = new Blob([bytes.buffer], { type: "application/octet-stream" });
+            navigator.msSaveBlob(blob, filename);
+            window.navigator.msSaveOrOpenBlob(blob);
+        }
+        else {
+            var link = document.createElement('a');
+            link.download = filename;
+            link.href = "data:application/octet-stream;base64," + bytesBase64;
+            document.body.appendChild(link); // Needed for Firefox
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+</script>
 
 <style>
     .menu-item {
