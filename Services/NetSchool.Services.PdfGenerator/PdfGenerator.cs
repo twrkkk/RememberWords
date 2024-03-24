@@ -1,49 +1,47 @@
-﻿using iText.Html2pdf;
-using iText.IO.Source;
-using iText.Kernel.Geom;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+﻿using Aspose.Pdf;
+using Aspose.Pdf.Text;
 using NetSchool.Context.Entities;
-using NetSchool.Services.PdfGenerator.Templates;
-using System.Text;
 
-namespace NetSchool.Services.PdfGenerator;
-
-public class PdfGenerator
+namespace NetSchool.Services.PdfGenerator
 {
-    public byte[] CardCollectionToPdf(CardCollection cardCollection)
+    public class PdfGenerator
     {
-        var html = HtmlToPdfTemplates.GetHTMLCardCollection(cardCollection);
-
-        string cssContent;
-        using (var reader = new StreamReader(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Assets", "styles.css")))
+        public byte[] CardCollectionToPdf(CardCollection cardCollection)
         {
-            cssContent = reader.ReadToEnd();
-        }
+            Document doc = new Document();
+            Page page = doc.Pages.Add();
 
-        using (var ms = new MemoryStream())
-        {
-            using (var doc = new Document())
+            TextFragment textFragment = new TextFragment(cardCollection.Name);
+            textFragment.TextState.FontSize = 14;
+            textFragment.TextState.HorizontalAlignment = HorizontalAlignment.Center;
+            page.Paragraphs.Add(textFragment);
+            page.Paragraphs.Add(new TextFragment());
+
+            Table table = new Table();
+            table.Border = new BorderInfo(BorderSide.All, .5f, Color.FromRgb(System.Drawing.Color.LightGray));
+            table.DefaultCellBorder = new BorderInfo(BorderSide.All, .5f, Color.FromRgb(System.Drawing.Color.LightGray));
+            table.DefaultCellTextState = new TextState(12);
+            table.DefaultCellTextState.HorizontalAlignment = HorizontalAlignment.Center;
+
+            Row row = table.Rows.Add();
+            row.Cells.Add("Term");
+            row.Cells.Add("Definition");
+
+            foreach (var card in cardCollection.Cards)
             {
-                doc.AddTitle(cardCollection.Name);
-
-                using (var writer = PdfWriter.GetInstance(doc, ms))
-                {
-                    doc.Open();
-
-                    using (var msCss = new MemoryStream(Encoding.UTF8.GetBytes(cssContent)))
-                    {
-                        using (var msHtml = new MemoryStream(Encoding.UTF8.GetBytes((string)html)))
-                        {
-                            iTextSharp.tool.xml.XMLWorkerHelper.GetInstance().ParseXHtml(writer, doc, msHtml, msCss);
-                        }
-                    }
-
-                    doc.Close();
-                }
+                row = table.Rows.Add();
+                row.Cells.Add(card.Front);
+                row.Cells.Add(card.Reverse);
             }
 
-            return ms.ToArray();
+            table.ColumnWidths = "50%";
+
+            page.Paragraphs.Add(table);
+
+            MemoryStream stream = new MemoryStream();
+            doc.Save(stream);
+
+            return stream.ToArray();
         }
     }
 }
