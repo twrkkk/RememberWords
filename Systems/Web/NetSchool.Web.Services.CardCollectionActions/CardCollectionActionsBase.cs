@@ -1,4 +1,5 @@
 ﻿using NetSchool.Web.Entities.CardCollections;
+using NetSchool.Web.Entities.CardCollections.Enums;
 
 namespace NetSchool.Web.Services.CardCollectionActions;
 
@@ -38,5 +39,5 @@ public abstract class CardCollectionActionsBase
         collection.Cards.Remove(card);
     }
 
-    public abstract Task SaveChanges(Guid collectionId);
+    public abstract Task SaveChanges(Guid collectionId, CardCollectionSavePeriod SavePeriod);
 }

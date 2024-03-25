@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NetSchool.Context;
 using NetSchool.Services.CardCollections.Cards.Models;
+using NetSchool.Services.CardCollections.Enums;
 
 namespace NetSchool.Services.CardCollections;
 
@@ -10,6 +11,7 @@ public class UpdateModel
     public string Name { get; set; }
     public IList<CardModel> UpdatedCards { get; set; }
     public IList<Guid> DeletedCardsId { get; set; }
+    public CardCollectionSavePeriod SavePeriod { get; set; }
 }
 public class UpdateModelValidator : AbstractValidator<UpdateModel>
 {

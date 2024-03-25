@@ -109,7 +109,7 @@ public class CartCollectionService : ICartCollectionService
         var user = context.Users.Include(x => x.CardCollections).FirstOrDefault(x => x.Id == model.UserId);
         if (user != null)
         {
-            collection.TimeExpiration = DateTime.UtcNow.AddDays(7);
+            collection.TimeExpiration = DateTime.UtcNow.AddDays((int)model.SavePeriod);
             user.CardCollections.Add(collection);
         }
 
@@ -170,6 +170,7 @@ public class CartCollectionService : ICartCollectionService
             }
         }
 
+        collection.TimeExpiration = DateTime.UtcNow.AddDays((int)model.SavePeriod);
         collection.Name = model.Name;
 
         context.CardCollections.Update(collection);

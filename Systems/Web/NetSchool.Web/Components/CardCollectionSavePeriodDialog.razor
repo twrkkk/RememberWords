@@ -1,0 +1,26 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudSelect T="int" @bind-Value="SavePeriod" Label="At days" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+            <MudSelectItem Value=3 />
+            <MudSelectItem Value=7 />
+            <MudSelectItem Value=14 />
+            <MudSelectItem Value=30 />
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    public int SavePeriod { get; set; } = 3;
+
+    void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

@@ -61,7 +61,9 @@ else
                         <MudText Typo="Typo.subtitle1">@user.RegistrationDate.ToString()</MudText>
                         @foreach (var collection in user.CardCollections)
                     {
-                        <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
+                        <div>
+                            <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
+                        </div>
                     }
                 </MudItem>
             </MudGrid>

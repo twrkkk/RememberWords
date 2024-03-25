@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using NetSchool.Web.Entities.CardCollections;
+using NetSchool.Web.Entities.CardCollections.Enums;
 using NetSchool.Web.Services.CardCollections;
 
 namespace NetSchool.Web.Services.CardCollectionActions
@@ -15,7 +16,7 @@ namespace NetSchool.Web.Services.CardCollectionActions
             this.cardService = cardService;
         }
 
-        public override async Task SaveChanges(Guid collectionId)
+        public override async Task SaveChanges(Guid collectionId, CardCollectionSavePeriod SavePeriod)
         {
             var authState = await authProvider.GetAuthenticationStateAsync();
             var userId = authState.User.Claims.FirstOrDefault(x => x.Type.ToLower() == "sub").Value;
@@ -23,7 +24,8 @@ namespace NetSchool.Web.Services.CardCollectionActions
             {
                 Name = collection.Name,
                 UserId = new Guid(userId),
-                Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList()
+                Cards = collection.Cards.Select(x => new CreateCardModel { Front = x.Front, Reverse = x.Reverse }).ToList(),
+                SavePeriod = SavePeriod
             };
 
             try

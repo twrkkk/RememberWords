@@ -4,6 +4,7 @@ using NetSchool.Context.Entities;
 using NetSchool.Context;
 using NetSchool.Services.CardCollections.Cards.Models;
 using FluentValidation;
+using NetSchool.Services.CardCollections.Enums;
 
 namespace NetSchool.Services.CardCollections;
 
@@ -12,6 +13,7 @@ public class CreateModel
     public Guid UserId { get; set; }
     public string Name { get; set; }
     public IEnumerable<CreateCardModel> Cards { get; set; }
+    public CardCollectionSavePeriod SavePeriod { get; set; }
 }
 
 public class CreateModelProfile : Profile

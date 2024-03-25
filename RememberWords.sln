@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{09F3A700-AB9F-4F7E-BCB0-63896BDB3142}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{882F0650-D226-4C80-B15F-5D99298BDFC6}"
+	ProjectSection(SolutionItems) = preProject
+		Systems\Web\NetSchool.Web.Services.CardCollectionActions\Enums\CardCollectionSavePeriod.cs = Systems\Web\NetSchool.Web.Services.CardCollectionActions\Enums\CardCollectionSavePeriod.cs
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Api", "Systems\Api\NetSchool.Api\NetSchool.Api.csproj", "{207D8FD9-AE5F-4DE7-B7F1-8FB996D135C4}"
 EndProject
@@ -84,7 +87,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.Filters"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.PdfGenerator", "Services\NetSchool.Services.PdfGenerator\NetSchool.Services.PdfGenerator.csproj", "{BA944BDC-60AF-468B-87F5-652F2424501F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSchool.Services.LoadCustomAssembly", "Services\NetSchool.Services.LoadCustomAssembly\NetSchool.Services.LoadCustomAssembly.csproj", "{575859E8-DD00-4D12-AE21-12E5BD598F05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSchool.Services.LoadCustomAssembly", "Services\NetSchool.Services.LoadCustomAssembly\NetSchool.Services.LoadCustomAssembly.csproj", "{575859E8-DD00-4D12-AE21-12E5BD598F05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

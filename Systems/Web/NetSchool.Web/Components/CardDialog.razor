@@ -5,18 +5,20 @@
     <DialogContent>
         <MudForm Model="Model" @ref="form">
             <MudGrid>
-                <MudItem xs="12" sm="6">
+                <MudItem xs="12" sm="12">
                     <MudTextField Label="Term" @bind-Value="Model.Front"
                                   For="@(() => Model.Front)"
                                   Required="true"
                                   RequiredError="Term is required!"
-                                  MaxLength="200">
+                                  MaxLength="200"
+                                  AutoGrow="true">
                     </MudTextField>
                     <MudTextField Label="Definition" @bind-Value="Model.Reverse"
                                   For="@(() => Model.Reverse)"
                                   Required="true"
                                   RequiredError="Definition is required!"
-                                  MaxLength="400">
+                                  MaxLength="400"
+                                  AutoGrow="true">
                     </MudTextField>
                 </MudItem>
             </MudGrid>

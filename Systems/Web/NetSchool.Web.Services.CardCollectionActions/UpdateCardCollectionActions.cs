@@ -1,4 +1,5 @@
 ﻿using NetSchool.Web.Entities.CardCollections;
+using NetSchool.Web.Entities.CardCollections.Enums;
 using NetSchool.Web.Services.CardCollections;
 
 namespace NetSchool.Web.Services.CardCollectionActions
@@ -53,9 +54,10 @@ namespace NetSchool.Web.Services.CardCollectionActions
             updateModel.DeletedCardsId.Add(cardId);
         }
 
-        public override async Task SaveChanges(Guid collectionId)
+        public override async Task SaveChanges(Guid collectionId, CardCollectionSavePeriod savePeriod)
         {
             updateModel.Name = collection.Name;
+            updateModel.SavePeriod = savePeriod;
             try
             {
                 await cardService.Update(collectionId, updateModel);
