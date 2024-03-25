@@ -180,7 +180,7 @@ public class CartCollectionService : ICartCollectionService
 
     public async Task SendEmailForSubscribersAsync(User user, CardCollection newCollection)
     {
-        var uriBuilder = new UriBuilder("https", "localhost", 7165, "/show-collection");
+        var uriBuilder = new UriBuilder("http", "localhost", 7165, "/show-collection");
         var query = HttpUtility.ParseQueryString(uriBuilder.Query);
         query["collectionId"] = newCollection.Uid.ToString();
         uriBuilder.Query = query.ToString();

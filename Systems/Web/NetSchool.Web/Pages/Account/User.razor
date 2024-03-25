@@ -34,7 +34,9 @@ else
                     <MudText Typo="Typo.subtitle1" Margin="Margin.Top">@user.UserName</MudText>
                         @foreach (var collection in user.CardCollections)
                     {
-                        <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
+                        <div>
+                            <MudLink OnClick="()=>OpenCollection(collection.Id)">@collection.Name</MudLink>
+                        </div>
                     }
                 </MudItem>
             </MudGrid>
@@ -67,8 +69,15 @@ else
                 NavManager.NavigateTo("/");
                 return;
             }
+
             user = await accountService.GetAsync(new Guid(userId));
             var watcherId = new Guid(await accountService.GetUserIdAsync()); // person who opened this profile
+
+            if (user.Id == watcherId)
+            {
+                NavManager.NavigateTo("/profile");
+            }
+
             Subscribed = user.Followers.Any(x => x.Id == watcherId);
         }
         catch (Exception ex)
