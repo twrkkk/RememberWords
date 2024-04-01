@@ -1,0 +1,21 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavManager
+
+@if (backPageAvailable)
+{
+    <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="GoBack" />
+}
+
+@code {
+    bool backPageAvailable;
+    protected override void OnInitialized()
+    {
+        var path = NavManager.ToBaseRelativePath(NavManager.Uri);
+        backPageAvailable = path == "" ? false : true;
+    }
+
+    private async Task GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+}

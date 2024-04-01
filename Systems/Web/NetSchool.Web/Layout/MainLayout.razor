@@ -3,32 +3,34 @@
 @inherits LayoutComponentBase
 @inject IConfigurationService ConfigurationService
 
-<MudThemeProvider @bind-IsDarkMode="isDarkMode"/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
-            
+<MudThemeProvider @bind-IsDarkMode="isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggleAsync" />
         <MudSpacer />
-        <MudIconButton Icon="@(isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" @onclick="@ToggleDarkModeAsync" Color="Color.Inherit" Edge="Edge.End" />
-        <UserMenu/>
+        <MudIconButton Title="Switch Light Mode" Icon="@(isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" @onclick="@ToggleDarkModeAsync" Color="Color.Inherit" Edge="Edge.End" />
+        <UserMenu />
     </MudAppBar>
     <MudDrawer @bind-Open="drawerOpen" Elevation="2">
         <MudDrawerHeader>
             <MudText Typo="Typo.h5">Memorizing</MudText>
         </MudDrawerHeader>
-        <NavMenu/>
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large">
             @Body
         </MudContainer>
     </MudMainContent>
+
 </MudLayout>
 @code {
     private bool drawerOpen = true;
     private bool isDarkMode = false;
+    private bool backPageAvailable = false;
 
     protected override async Task OnInitializedAsync()
     {

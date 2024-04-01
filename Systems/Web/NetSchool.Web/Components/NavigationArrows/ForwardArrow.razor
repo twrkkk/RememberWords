@@ -1,0 +1,21 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavManager
+
+@if (forwardPageAvailable)
+{
+    <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" OnClick="GoForward" />
+}
+
+@code {
+    bool forwardPageAvailable;
+    protected override void OnInitialized()
+    {
+        var path = NavManager.ToBaseRelativePath(NavManager.Uri);
+        forwardPageAvailable = path == "" ? false : true;
+    }
+
+    private async Task GoForward()
+    {
+        await JSRuntime.InvokeVoidAsync("history.forward");
+    }
+}

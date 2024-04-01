@@ -40,12 +40,14 @@
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudTextField 
+                                            Disabled="true"
                                             AutoGrow="true" 
                                             Value="@component.Front" 
                                             Label="Term" 
                                             Variant="Variant.Filled" 
                                             Style="width: 100%;" />
                                         <MudTextField 
+                                            Disabled="true"
                                             AutoGrow="true" 
                                             Value="@component.Reverse" 
                                             Label="Definition" 
@@ -54,12 +56,14 @@
                                     </MudItem>
                                     <MudItem xs="1">
                                         <MudIconButton 
+                                            Title="Edit Card Collection"
                                             Icon="@Icons.Material.Filled.Edit" 
                                             Variant="Variant.Outlined"
                                             Color="Color.Primary" 
                                             Size="Size.Small" 
                                             OnClick="() => EditCard(component)" />
                                         <MudIconButton 
+                                            Title="Delete Card Collection"
                                             Icon="@Icons.Material.Filled.Delete" 
                                             Variant="Variant.Outlined" 
                                             Color="Color.Primary" 

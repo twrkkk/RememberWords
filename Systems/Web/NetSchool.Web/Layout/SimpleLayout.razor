@@ -11,7 +11,7 @@
     <MudAppBar Elevation="0">
         <MudText Typo="Typo.h5">Memorizing</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@(darkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" @onclick="@DarkModeSwitch" Color="Color.Inherit" Edge="Edge.End" />
+        <MudIconButton Title="Switch Light Mode" Icon="@(darkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" @onclick="@DarkModeSwitch" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudMainContent>
         @Body

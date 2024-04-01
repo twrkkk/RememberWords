@@ -23,7 +23,7 @@
         <col style="width:200px;" />
     </ColGroup>
     <ToolBarContent>
-        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCollection">Add</MudButton>
+        <MudButton Title="Create new Card Collection" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCollection">Add</MudButton>
         <MudSpacer />
         <MudTextField Immediate="true" @bind-Value="searchString" OnKeyDown="OnEnterDown" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
     </ToolBarContent>
@@ -38,10 +38,10 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="TimeExpiration">@context.TimeExpiraton</MudTd>
             <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
-                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => ShowCollection(context.Id)" />
-                <MudIconButton Icon="@Icons.Material.Filled.Face" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => OpenUserProfile(context.UserId)" />
+                <MudIconButton Title="Edit Card Collection" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
+                <MudIconButton Title="Delete Card Collection" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
+                <MudIconButton Title="Open Card Collection" Icon="@Icons.Material.Filled.RemoveRedEye" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => ShowCollection(context.Id)" />
+                <MudIconButton Title="Author Profile" Icon="@Icons.Material.Filled.Face" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => OpenUserProfile(context.UserId)" />
             </MudTd>
         </RowTemplate>
         <PagerContent>
