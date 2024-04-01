@@ -1,4 +1,5 @@
 ﻿@page "/show-collection"
+@using NetSchool.Web.Components.NavigationArrows
 @using NetSchool.Web.Entities.CardCollections
 @using NetSchool.Web.Extensions
 @using NetSchool.Web.Services.CardCollections
@@ -13,6 +14,8 @@
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 @layout MainLayout
+
+<BackArrow/>
 
 <MudPaper Elevation="25">
     <MudToolBar>

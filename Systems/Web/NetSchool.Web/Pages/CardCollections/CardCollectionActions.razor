@@ -8,6 +8,7 @@
 @using NetSchool.Web.Services.CardCollections
 @using NetSchool.Web.Services.CardCollectionActions
 @using System.Security.Claims
+@using NetSchool.Web.Components.NavigationArrows
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject ICardCollectionsService cardService
@@ -16,6 +17,8 @@
 
 @attribute [Authorize]
 @layout MainLayout
+
+<BackArrow/>
 
 <PageTitle>Create card collection</PageTitle>
 
