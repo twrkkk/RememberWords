@@ -7,7 +7,6 @@ using NetSchool.Api.Settings;
 using NetSchool.Services.RabbitMq;
 using NetSchool.Services.Actions;
 using NetSchool.Services.PdfGenerator;
-using NetSchool.Services.LoadCustomAssembly;
 
 namespace NetSchool.Api;
 
@@ -15,11 +14,13 @@ public static class Bootstrapper
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
+        var redisSettings = NetSchool.Settings.Settings.Load<RedisSettings>("Redis");
+
         services.AddMainSettings()
             .AddSwaggerSettings()
             .AddLogSettings()
             .AddAppLogger()
-            .AddCartCollectionService()
+            .AddCartCollectionService(redisSettings)
             .AddIdentitySettings()
             .AddDbSeeder()
             .AddUserAccountService()

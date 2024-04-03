@@ -63,6 +63,17 @@ services:
       ports:
         - 7165:80
 
+  redis:
+      restart: always
+      ports:
+          - "6379:6379"
+      volumes:
+          - $PWD/redis-data:/var/lib/redis
+          - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+      environment:
+          - REDIS_PASSWORD=my-password
+          - REDIS_PORT=6379
+          - REDIS_DATABASES=16
 networks:
   shared_netschool_net:
     name: net_school

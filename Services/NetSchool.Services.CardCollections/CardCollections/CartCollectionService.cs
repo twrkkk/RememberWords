@@ -9,9 +9,10 @@ using NetSchool.Context.Entities;
 using NetSchool.Services.Actions;
 using NetSchool.Services.CardCollections.Models;
 using NetSchool.Services.EmailSender.Models;
-using System.Runtime.CompilerServices;
 using System.Web;
-using NetSchool.Services.PdfGenerator;
+using Microsoft.Extensions.Caching.Distributed;
+using NetSchool.Services.Logger;
+using Newtonsoft.Json;
 
 namespace NetSchool.Services.CardCollections.CardCollections;
 
@@ -24,8 +25,10 @@ public class CartCollectionService : ICartCollectionService
     private readonly IAction action;
     private readonly UserManager<User> userManager;
     private readonly PdfGenerator.PdfGenerator pdfGenerator;
+    private readonly IDistributedCache cache;
+    private readonly IAppLogger logger;
 
-    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager, PdfGenerator.PdfGenerator pdfGenerator)
+    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager, PdfGenerator.PdfGenerator pdfGenerator, IDistributedCache cache, IAppLogger logger)
     {
         _dbContextFactory = dbContextFactory;
         _mapper = mapper;
@@ -34,6 +37,8 @@ public class CartCollectionService : ICartCollectionService
         this.action = action;
         this.userManager = userManager;
         this.pdfGenerator = pdfGenerator;
+        this.cache = cache;
+        this.logger = logger;
     }
 
     public async Task<IEnumerable<CardCollectionModel>> GetAllAsync()
@@ -57,7 +62,7 @@ public class CartCollectionService : ICartCollectionService
         var collections = await context.CardCollections
             .Include(x => x.User)
             .Include(x => x.Cards)
-            .Where(x=>x.Name.ToLower().Contains(name.ToLower()))
+            .Where(x => x.Name.ToLower().Contains(name.ToLower()))
             .ToListAsync();
 
         var result = _mapper.Map<IEnumerable<CardCollectionModel>>(collections);
@@ -83,17 +88,32 @@ public class CartCollectionService : ICartCollectionService
 
     public async Task<CardCollectionModel> GetAsync(Guid id)
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
+        var cardCollectionString = await cache.GetStringAsync(id.ToString());
+        CardCollectionModel result;
 
-        var collection = await context.CardCollections
-            .Include(x => x.User)
-            .Include(x => x.Cards)
-            .FirstOrDefaultAsync(x => x.Uid == id);
+        if (cardCollectionString != null)
+        {
+            result = JsonConvert.DeserializeObject<CardCollectionModel>(cardCollectionString);
+            logger.Information($"Collection Id: {id} was extracted from cache");
+        }
+        else
+        {
+            using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        if (collection == null)
-            throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
+            var cardCollection = await context.CardCollections
+                .Include(x => x.User)
+                .Include(x => x.Cards)
+                .FirstOrDefaultAsync(x => x.Uid == id);
 
-        var result = _mapper.Map<CardCollectionModel>(collection);
+            if (cardCollection == null)
+                throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
+
+            logger.Information($"Collection Id: {id} was extracted from DB");
+
+            result = _mapper.Map<CardCollectionModel>(cardCollection);
+
+            await SaveCardCollectionInCache(result);
+        }
 
         return result;
     }
@@ -115,9 +135,12 @@ public class CartCollectionService : ICartCollectionService
 
         await context.SaveChangesAsync();
 
+        var result = _mapper.Map<CardCollectionModel>(collection);
+        await SaveCardCollectionInCache(result);
+
         await SendEmailForSubscribersAsync(user, collection);
 
-        return _mapper.Map<CardCollectionModel>(collection);
+        return result;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -130,6 +153,8 @@ public class CartCollectionService : ICartCollectionService
             throw new EntityNotFoundException($"Collection (ID = {id}) not found.");
 
         context.CardCollections.Remove(collection);
+
+        await RemoveCardCollectionFromCache(id);
 
         await context.SaveChangesAsync();
     }
@@ -175,6 +200,9 @@ public class CartCollectionService : ICartCollectionService
 
         context.CardCollections.Update(collection);
 
+        var result = _mapper.Map<CardCollectionModel>(collection);
+        await SaveCardCollectionInCache(result);
+
         await context.SaveChangesAsync();
     }
 
@@ -206,5 +234,24 @@ public class CartCollectionService : ICartCollectionService
         var result = _mapper.Map<CardCollection>(collection);
 
         return pdfGenerator.CardCollectionToPdf(result);
+    }
+
+    private async Task SaveCardCollectionInCache(CardCollectionModel cardCollection)
+    {
+        var cardCollectionString = JsonConvert.SerializeObject(cardCollection, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+
+        await cache.SetStringAsync(cardCollection.Id.ToString(), cardCollectionString, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+    }
+
+    private async Task RemoveCardCollectionFromCache(Guid id)
+    {
+        await cache.RemoveAsync(id.ToString());
     }
 }
