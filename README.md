@@ -32,6 +32,20 @@ Here are the addresses of the services that you may need:
 * [Api with Swagger docs](http://localhost:10000/)
 
 
+## Features
+
+* Backend: ASP.Net Core 8 Web Api 
+* Client: Blazor WASM
+* Code First. PostgreSql
+* IdentityServer4 for authorization & authentication
+* Jwt & Refresh tokens
+* RabbitMq
+* Sending email messages
+* Redis caching 
+* PDF generation 
+* Deploy in Docker
+
+
 ## Contributing
 
 Bug reports and/or pull requests are welcome
