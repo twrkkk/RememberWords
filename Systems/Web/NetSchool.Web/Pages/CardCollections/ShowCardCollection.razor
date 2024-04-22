@@ -13,9 +13,10 @@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
+@inject IDialogService DialogService
 @layout MainLayout
 
-<BackArrow/>
+<BackArrow />
 
 <MudPaper Elevation="25">
     <MudToolBar>
@@ -23,18 +24,19 @@
             <MudSpacer />
             <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary">
                 <div class="menu-item"
-                        <MudSwitch @bind-Value="@Settings.Arrows" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Arrows</MudSwitch>
-                        <MudSwitch @bind-Value="@Settings.Bullets" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Bullets</MudSwitch>
-                        <MudSwitch @bind-Value="@Settings.SwipeGesture" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
-                        <MudSwitch @bind-Value="@Settings.Autocycle" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Auto Cycle</MudSwitch>
-                        <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
-                    </div>
+                            <MudSwitch @bind-Value="@Settings.Arrows" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Arrows</MudSwitch>
+                            <MudSwitch @bind-Value="@Settings.Bullets" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Show Bullets</MudSwitch>
+                            <MudSwitch @bind-Value="@Settings.SwipeGesture" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
+                            <MudSwitch @bind-Value="@Settings.Autocycle" CheckedChanged="(bool _)=>SaveViewSettings(_)" Color="Color.Primary">Auto Cycle</MudSwitch>
+                            <MudButton OnClick="ShuffleCards">Shuffle Cards</MudButton>
+                        </div>
             </MudMenu>
-            @if (_showEditCollectionButton)
+            @if (_isOwnerOpenThisPage)
         {
             <MudIconButton Title="Edit Card Collection" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="EditCollection" />
+            <MudIconButton Title="Delete Card Collection" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="DeleteCollection" />
         }
-        <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="GenerateAndDownloadPdf" Title="Download as Pdf"/>
+        <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="GenerateAndDownloadPdf" Title="Download as Pdf" />
     </MudToolBar>
 </MudPaper>
 
@@ -54,7 +56,7 @@
     private const string CollectionViewSettingsKey = "CollectionViewSettings";
     private MudCarousel<CardModel> _carousel;
     private int selectedIndex = 0;
-    private bool _showEditCollectionButton = false;
+    private bool _isOwnerOpenThisPage = false;
     [SupplyParameterFromQuery] private string collectionId { get; set; }
     private CardCollectionModel _collection { get; set; } = new();
     [Parameter] public ViewSettings Settings { get; set; } = new();
@@ -85,7 +87,7 @@
             _collection = await CardCollectionService.Get(new Guid(collectionId));
             _collection.Cards?.Shuffle();
             var userId = await AccountService.GetUserIdAsync();
-            _showEditCollectionButton = userId == _collection.UserId.ToString(); // show edit collection button if user is creator of collection
+            _isOwnerOpenThisPage = userId == _collection.UserId.ToString(); // show edit collection button if user is creator of collection
             await LoadViewSettings();
         }
         catch (Exception ex)
@@ -108,6 +110,33 @@
     private void EditCollection()
     {
         NavManager.NavigateTo($"/update-collection?collectionId={collectionId}");
+    }
+
+    private async Task DeleteCollection()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this collection? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete collection", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+            return;
+
+        try
+        {
+            await CardCollectionService.Delete(_collection.Id);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+
+        NavManager.NavigateTo("/collections");
     }
 
     private async Task SaveViewSettings(bool value)

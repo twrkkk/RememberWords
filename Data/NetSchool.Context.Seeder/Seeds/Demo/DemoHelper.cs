@@ -15,47 +15,53 @@ public static class DemoHelper
     {
         new CardCollection()
         {
-            Name = "test name",
+            Name = "Продукты",
             TimeExpiration = DateTime.UtcNow.AddDays(7),
             Cards = new List<Card>()
             {
                 new Card
                 {
-                    Front = "front 1",
-                    Reverse = "reverse 1"
+                    Front = "Apple",
+                    Reverse = "Яблоко"
                 },
                 new Card
                 {
-                    Front = "front 2",
-                    Reverse = "reverse 2"
+                    Front = "Cheese",
+                    Reverse = "Сыр"
                 },
                 new Card
                 {
-                    Front = "front 3",
-                    Reverse = "reverse 3"
+                    Front = "Potato",
+                    Reverse = "Картофель"
                 }
             }
         },
         new CardCollection()
         {
-            Name = "test name 2",
-            TimeExpiration = DateTime.UtcNow.AddDays(7),
+            Name = "Home",
+            TimeExpiration = DateTime.UtcNow.AddDays(3),
             Cards = new List<Card>()
             {
                 new Card
                 {
-                    Front = "front 1",
-                    Reverse = "reverse 1"
+                    Front = "Table",
+                    Reverse = "Стол"
                 },
                 new Card
                 {
-                    Front = "front 2",
-                    Reverse = "reverse 2"
+                    Front = "Chair",
+                    Reverse = "Стул"
                 },
                 new Card
                 {
-                    Front = "front 3",
-                    Reverse = "reverse 3"
+                    Front = "Window",
+                    Reverse = "Окно"
+                }
+                ,
+                new Card
+                {
+                    Front = "Sofa",
+                    Reverse = "Диван"
                 }
             }
         }

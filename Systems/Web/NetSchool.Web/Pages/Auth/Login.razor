@@ -22,6 +22,7 @@
 
                 <MudTextField T="string"
                               @bind-Value="model.Username" For="@(() => model.Username)"
+                              Label="UserName"
                               Required="true"
                               RequiredError="Username is required!"
                               HelperText="Input your username"
@@ -58,11 +59,7 @@
     bool success;
     MudForm form;
 
-    private LoginModel model = new LoginModel()
-        {
-            Username = "admin@dsrnetschool.com",
-            Password = "Pass1234"
-        };
+    private LoginModel model = new LoginModel();
 
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;

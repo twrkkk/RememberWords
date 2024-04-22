@@ -2,10 +2,12 @@
 @using Microsoft.AspNetCore.Authorization
 @using NetSchool.Web.Components
 @using NetSchool.Web.Entities.CardCollections
+@using NetSchool.Web.Pages.Account.Services
 @using NetSchool.Web.Services.CardCollections
 @inject ICardCollectionsService CardCollectionsService
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject IAccountService AccountService
 @inject NavigationManager NavManager
 
 @attribute [Authorize]
@@ -38,20 +40,24 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="TimeExpiration">@context.TimeExpiraton</MudTd>
             <MudTd>
-                <MudIconButton Title="Edit Card Collection" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
-                <MudIconButton Title="Delete Card Collection" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
                 <MudIconButton Title="Open Card Collection" Icon="@Icons.Material.Filled.RemoveRedEye" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => ShowCollection(context.Id)" />
                 <MudIconButton Title="Author Profile" Icon="@Icons.Material.Filled.Face" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => OpenUserProfile(context.UserId)" />
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+                @if (userId == context.UserId) // creator open this collection
+            {
+                <MudIconButton Title="Edit Card Collection" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => EditCollection(context.Id)" />
+                <MudIconButton Title="Delete Card Collection" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => DeleteCollection(context.Id)" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
-    @code {
+@code {
     private IEnumerable<CardCollectionModel> collections = new List<CardCollectionModel>();
     private string searchString = string.Empty;
+    private Guid userId;
 
     private async Task ReloadData()
     {
@@ -71,6 +77,7 @@
     protected override async Task OnInitializedAsync()
     {
         await ReloadData();
+        userId = new Guid(await AccountService.GetUserIdAsync());
     }
 
     private void AddCollection()

@@ -4,9 +4,14 @@
 
 ## Installation
 
-Run git-clone:
+Run git clone:
 ```bash
-git-clone https://github.com/twrkkk/RememberWords.git
+git clone https://github.com/twrkkk/RememberWords.git
+```
+
+Go to the directory:
+```bash
+cd RememberWords
 ```
 
 And run docker-compose build:
