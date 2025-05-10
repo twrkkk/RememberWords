@@ -24,9 +24,7 @@ public static class IS4Configuration
 
         services
             .AddIdentityServer()
-            
             .AddAspNetIdentity<User>()
-
             .AddInMemoryApiScopes(AppApiScopes.ApiScopes)
             .AddInMemoryClients(AppClients.Clients)
             .AddInMemoryApiResources(AppResources.Resources)

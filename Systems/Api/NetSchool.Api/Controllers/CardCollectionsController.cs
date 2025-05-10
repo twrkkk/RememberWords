@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NetSchool.Common.Security;
 using NetSchool.Services.CardCollections;
 using NetSchool.Services.CardCollections.CardCollections;
 using NetSchool.Services.CardCollections.Models;
@@ -22,7 +24,7 @@ namespace NetSchool.Api.Controllers
         }
 
         [HttpGet("")]
-        //[Authorize(AppScopes.CollectionsRead)]
+        [Authorize(AppScopes.CollectionsRead)]
         public async Task<IEnumerable<CardCollectionModel>> GetAll()
         {
             var result = await _cartCollectionService.GetAllAsync();
