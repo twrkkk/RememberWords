@@ -13,6 +13,12 @@ using System.Web;
 using Microsoft.Extensions.Caching.Distributed;
 using NetSchool.Services.Logger;
 using Newtonsoft.Json;
+using NetSchool.Services.CardCollections.Cards.Models;
+using FluentValidation;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
+using NetSchool.Services.CardCollections.CardCollections.Models;
 
 namespace NetSchool.Services.CardCollections.CardCollections;
 
@@ -27,8 +33,10 @@ public class CartCollectionService : ICartCollectionService
     private readonly PdfGenerator.PdfGenerator pdfGenerator;
     private readonly IDistributedCache cache;
     private readonly IAppLogger logger;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager, PdfGenerator.PdfGenerator pdfGenerator, IDistributedCache cache, IAppLogger logger)
+
+    public CartCollectionService(IDbContextFactory<MainDbContext> dbContextFactory, IMapper mapper, IModelValidator<CreateModel> createModelValidator, IModelValidator<UpdateModel> updateModelValidator, IAction action, UserManager<User> userManager, PdfGenerator.PdfGenerator pdfGenerator, IDistributedCache cache, IHttpClientFactory httpClientFactory, IAppLogger logger)
     {
         _dbContextFactory = dbContextFactory;
         _mapper = mapper;
@@ -38,6 +46,7 @@ public class CartCollectionService : ICartCollectionService
         this.userManager = userManager;
         this.pdfGenerator = pdfGenerator;
         this.cache = cache;
+        _httpClientFactory = httpClientFactory;
         this.logger = logger;
     }
 
@@ -253,5 +262,50 @@ public class CartCollectionService : ICartCollectionService
     private async Task RemoveCardCollectionFromCache(Guid id)
     {
         await cache.RemoveAsync(id.ToString());
+    }
+
+    public async Task<IEnumerable<CreateCardModel>> GenerateWithAI(string prompt)
+    {
+        var a = new[]
+            {
+                new
+                {
+                    role = "user",
+                    text = $"Сгенерируй набор из 10 элементов такого вида [{{\"Front\": \"term\", \"Reverse\": \"definition\"}}] на тему: {prompt}"
+                },
+                new
+                {
+                    role = "system",
+                    text = "a"
+                }
+            };
+        var requestContent = new StringContent(System.Text.Json.JsonSerializer.Serialize(new
+        {
+            modelUri = "gpt://b1ghqukph951bqa0oejt/yandexgpt/rc",
+            completionOptions = new { maxTokens = 600, temperature = 1 },
+            messages = a
+        }), Encoding.UTF8, "application/json");
+
+        var client = _httpClientFactory.CreateClient("YandexGPT");
+        var response = await client.PostAsync("/foundationModels/v1/completion", requestContent);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        var gptResponse = System.Text.Json.JsonSerializer.Deserialize<GenerateCollectionResponse>(content);
+        var rawJson = gptResponse?.result?.alternatives?.FirstOrDefault()?.message?.text;
+
+        //if (string.IsNullOrWhiteSpace(rawJson))
+        //{
+        //    throw new GenerateCollectionException("Empty response from AI");
+        //}
+        rawJson = rawJson.Trim('`');
+
+        var cards = System.Text.Json.JsonSerializer.Deserialize<List<CreateCardModel>>(rawJson, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return cards;
     }
 }

@@ -6,12 +6,11 @@ namespace NetSchool.Web.Services.CardCollectionActions
 {
     public class UpdateCardCollectionActions : CardCollectionActionsBase
     {
-        private readonly ICardCollectionsService cardService;
+        
         private UpdateModel updateModel;
 
-        public UpdateCardCollectionActions(ICardCollectionsService cardService)
+        public UpdateCardCollectionActions(ICardCollectionsService cardService): base(cardService)
         {
-            this.cardService = cardService;
             updateModel = new();
             updateModel.UpdatedCards = new List<CardModel>();
             updateModel.DeletedCardsId = new List<Guid>();

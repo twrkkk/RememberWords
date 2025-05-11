@@ -1,5 +1,6 @@
 ﻿using NetSchool.Web.Entities.CardCollections;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace NetSchool.Web.Services.CardCollections;
 
@@ -113,5 +114,23 @@ public class CardCollectionService : ICardCollectionsService
         }
 
         return await response.Content.ReadFromJsonAsync<byte[]>() ?? new byte[0];
+    }
+
+    public async Task<CreateCardModel[]> GenerateWithAI(string prompt)
+    {
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
+        var response = await httpClient.GetAsync($"v1/CardCollections/GenerateWithAI?prompt={prompt}");
+        var content = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(content);
+        }
+
+        var cards = JsonSerializer.Deserialize<List<CreateCardModel>>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return cards.ToArray() ?? new CreateCardModel[0];
     }
 }

@@ -1,0 +1,200 @@
+﻿@page "/test-collection/{collectionId:guid}"
+@using NetSchool.Web.Entities.CardCollections
+@inject ICardCollectionsService CardCollectionService
+@inject NavigationManager NavManager
+@using System.Timers
+@using NetSchool.Web.Services.CardCollections
+
+<PageTitle>Test</PageTitle>
+
+@if (!testFinished && questions.Count > currentQuestionIndex)
+{
+    <MudGrid>
+        <MudItem xs="12" sm="3">
+            <MudPaper Class="pa-2">
+                <MudText Typo="Typo.subtitle2">Time Left: @timeLeftMin: @timeLeftSec.ToString("D2")</MudText>
+                    <MudDivider />
+                    <MudGrid>
+                        @for (int i = 0; i < questions.Count; i++)
+                    {
+                        var a = i;
+                        <MudItem xs="4">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="@(GetQuestionButtonColor(a))"
+                                       OnClick="@(() => GoToQuestion(a))"
+                                       Size="Size.Small">
+                                @(a + 1)
+                            </MudButton>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="9">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6">@questions[currentQuestionIndex].Question</MudText>
+                    <MudDivider Class="my-2" />
+                    <MudStack Direction="Column" Spacing="2">
+                        @foreach (var option in questions[currentQuestionIndex].Options)
+                    {
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="@(questions[currentQuestionIndex].SelectedAnswer == option ? Color.Primary : Color.Default)"
+                                   OnClick="@(() => SelectAnswer(option))"
+                                   Class="justify-start">
+                            @option
+                        </MudButton>
+                    }
+                </MudStack>
+                <MudDivider Class="my-4" />
+                <MudButton OnClick="FinishTest" Variant="Variant.Filled" Color="Color.Error">Finish Test</MudButton>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+else if (testFinished)
+{
+    <MudPaper Class="pa-6">
+        <MudText Typo="Typo.h5">Test Results</MudText>
+        <MudDivider Class="my-2" />
+        <MudText Typo="Typo.subtitle1">Correct: @correctAnswers / @questions.Count</MudText>
+
+            <!-- Table displaying results -->
+            <MudTable Items="@questions" Dense="true" Class="ma-8"
+                      RowClassFunc="@( (q, index) => q.SelectedAnswer == q.CorrectAnswer ? "mud-theme-success" : "mud-theme-error")">
+                <ColGroup>
+                    <col style="width: 200px;" />
+                    <col />
+                    <col />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh>Question</MudTh>
+                    <MudTh>Your Answer</MudTh>
+                    <MudTh>Correct Answer</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Question</MudTd>
+                    <MudTd>@context.SelectedAnswer</MudTd>
+                    <MudTd>@context.CorrectAnswer</MudTd>
+                </RowTemplate>
+            </MudTable>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Class="mt-4"
+                       OnClick="@(() => NavManager.NavigateTo("/collections"))">
+                Back to Collections
+            </MudButton>
+
+        </MudPaper>
+
+}
+else
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="ma-6" />
+}
+
+@code {
+    [Parameter] public Guid collectionId { get; set; }
+
+    private List<TestQuestion> questions = new();
+    private int currentQuestionIndex = 0;
+
+    private int correctAnswers = 0;
+    private bool testFinished = false;
+
+    private int timeLeftMin = 0;
+    private int timeLeftSec = 10;
+    private System.Timers.Timer? countdownTimer;
+
+    private class TestQuestion
+    {
+        public string Question { get; set; } = "";
+        public string CorrectAnswer { get; set; } = "";
+        public List<string> Options { get; set; } = new();
+        public string? SelectedAnswer { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var collection = await CardCollectionService.Get(collectionId);
+        var cards = collection.Cards;
+        var random = new Random();
+
+        foreach (var card in cards)
+        {
+            var incorrectAnswers = cards.Where(c => c.Id != card.Id)
+                                        .OrderBy(_ => random.Next())
+                                        .Take(2)
+                                        .Select(c => c.Reverse)
+                                        .ToList();
+
+            var options = incorrectAnswers.Append(card.Reverse)
+                                          .OrderBy(_ => random.Next())
+                                          .ToList();
+
+            questions.Add(new TestQuestion
+                {
+                    Question = card.Front,
+                    CorrectAnswer = card.Reverse,
+                    Options = options
+                });
+        }
+
+        StartTimer();
+    }
+
+    private void GoToQuestion(int index)
+    {
+        currentQuestionIndex = index;
+    }
+
+    private void SelectAnswer(string selected)
+    {
+        questions[currentQuestionIndex].SelectedAnswer = selected;
+        StateHasChanged();
+    }
+
+    private void FinishTest()
+    {
+        countdownTimer?.Stop();
+        correctAnswers = questions.Count(q => q.SelectedAnswer == q.CorrectAnswer);
+        testFinished = true;
+    }
+
+    private void StartTimer()
+    {
+        countdownTimer = new System.Timers.Timer(1000);
+        countdownTimer.Elapsed += async (s, e) =>
+        {
+            if (timeLeftSec == 0)
+            {
+                if (timeLeftMin == 0)
+                {
+                    countdownTimer.Stop();
+                    await InvokeAsync(FinishTest);
+                }
+                else
+                {
+                    timeLeftMin--;
+                    timeLeftSec = 59;
+                }
+            }
+            else
+            {
+                timeLeftSec--;
+            }
+
+            await InvokeAsync(StateHasChanged);
+        };
+        countdownTimer.Start();
+    }
+
+    private Color GetQuestionButtonColor(int index)
+    {
+        if (index == currentQuestionIndex)
+            return Color.Primary;
+
+        return questions[index].SelectedAnswer != null ? Color.Primary : Color.Default;
+    }
+}

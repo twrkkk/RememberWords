@@ -41,6 +41,7 @@
             <MudTd DataLabel="TimeExpiration">@context.TimeExpiraton</MudTd>
             <MudTd>
                 <MudIconButton Title="Open Card Collection" Icon="@Icons.Material.Filled.RemoveRedEye" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => ShowCollection(context.Id)" />
+                <MudIconButton Title="Start Test" Icon="@Icons.Material.Filled.PlayCircleOutline" Variant="Variant.Outlined" Color="Color.Success" Size="Size.Small" OnClick="() => StartTest(context.Id)" />
                 <MudIconButton Title="Author Profile" Icon="@Icons.Material.Filled.Face" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="() => OpenUserProfile(context.UserId)" />
                 @if (userId == context.UserId) // creator open this collection
             {
@@ -134,5 +135,10 @@
 
         await ReloadData();
         StateHasChanged();
+    }
+
+    private void StartTest(Guid id)
+    {
+        NavManager.NavigateTo($"/test-collection/{id}");
     }
 }

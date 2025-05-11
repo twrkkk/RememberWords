@@ -9,16 +9,19 @@
 @using NetSchool.Web.Services.CardCollectionActions
 @using System.Security.Claims
 @using NetSchool.Web.Components.NavigationArrows
+@using System.Text.Json
+@using System.Text
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject ICardCollectionsService cardService
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider authProvider
 
 @attribute [Authorize]
 @layout MainLayout
 
-<BackArrow/>
+<BackArrow />
 
 <PageTitle>Create card collection</PageTitle>
 
@@ -27,6 +30,28 @@
         <MudItem xs="12">
             <MudPaper>
                 <MudForm Model="cardActions.collection" @ref="form">
+
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Info"
+                               OnClick="ToggleAiBlock">
+                        @(showAiBlock ? "Hide AI Generator" : "Show AI Generator")
+                    </MudButton>
+
+                    @if (showAiBlock)
+                    {
+                        <MudTextField Label="Generate cards prompt"
+                                      @bind-Value="promptText"
+                                      Placeholder="Enter your topic or terms..."
+                                      Variant="Variant.Outlined"
+                                      FullWidth="true" />
+
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Success"
+                                   OnClick="async ()=> await GenerateCardsWithAI(promptText)">
+                            Generate with AI
+                        </MudButton>
+                    }
+
                     <MudTextField Label="Collection name" @bind-Value="cardActions.collection.Name"
                                   For="@(() => cardActions.collection.Name)"
                                   Required="true"
@@ -38,40 +63,36 @@
                         <MudCard>
                             <MudCardContent>
                                 <MudGrid>
-                                     <MudItem xs="1">
-                                        <MudText>@(index+1)</MudText>
+                                    <MudItem xs="1">
+                                        <MudText>@(index + 1)</MudText>
                                     </MudItem>
                                     <MudItem xs="10">
-                                        <MudTextField 
-                                            Disabled="true"
-                                            AutoGrow="true" 
-                                            Value="@component.Front" 
-                                            Label="Term" 
-                                            Variant="Variant.Filled" 
-                                            Style="width: 100%;" />
-                                        <MudTextField 
-                                            Disabled="true"
-                                            AutoGrow="true" 
-                                            Value="@component.Reverse" 
-                                            Label="Definition" 
-                                            Variant="Variant.Filled" 
-                                            Style="width: 100%;" />
+                                        <MudTextField Disabled="true"
+                                                      AutoGrow="true"
+                                                      Value="@component.Front"
+                                                      Label="Term"
+                                                      Variant="Variant.Filled"
+                                                      Style="width: 100%;" />
+                                        <MudTextField Disabled="true"
+                                                      AutoGrow="true"
+                                                      Value="@component.Reverse"
+                                                      Label="Definition"
+                                                      Variant="Variant.Filled"
+                                                      Style="width: 100%;" />
                                     </MudItem>
                                     <MudItem xs="1">
-                                        <MudIconButton 
-                                            Title="Edit Card Collection"
-                                            Icon="@Icons.Material.Filled.Edit" 
-                                            Variant="Variant.Outlined"
-                                            Color="Color.Primary" 
-                                            Size="Size.Small" 
-                                            OnClick="() => EditCard(component)" />
-                                        <MudIconButton 
-                                            Title="Delete Card Collection"
-                                            Icon="@Icons.Material.Filled.Delete" 
-                                            Variant="Variant.Outlined" 
-                                            Color="Color.Primary" 
-                                            Size="Size.Small" 
-                                            OnClick="() => DeleteCard(component.Id)" />
+                                        <MudIconButton Title="Edit Card Collection"
+                                                       Icon="@Icons.Material.Filled.Edit"
+                                                       Variant="Variant.Outlined"
+                                                       Color="Color.Primary"
+                                                       Size="Size.Small"
+                                                       OnClick="() => EditCard(component)" />
+                                        <MudIconButton Title="Delete Card Collection"
+                                                       Icon="@Icons.Material.Filled.Delete"
+                                                       Variant="Variant.Outlined"
+                                                       Color="Color.Primary"
+                                                       Size="Size.Small"
+                                                       OnClick="() => DeleteCard(component.Id)" />
                                     </MudItem>
                                 </MudGrid>
                             </MudCardContent>
@@ -81,15 +102,13 @@
                             <div style="height: 20px;"></div>
                         }
                     }
-                    <MudButton 
-                        Variant="Variant.Filled" 
-                        Color="Color.Primary" 
-                        OnClick="AddCard">Add card</MudButton>
-                    <MudButton 
-                        Variant="Variant.Filled" 
-                        Color="Color.Secondary" 
-                        OnClick="SaveCollection" 
-                        Disabled="@(!cardActions.collection.Cards.Any())">Save</MudButton>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="AddCard">Add card</MudButton>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Secondary"
+                               OnClick="SaveCollection"
+                               Disabled="@(!cardActions.collection.Cards.Any())">Save</MudButton>
 
                 </MudForm>
             </MudPaper>
@@ -103,7 +122,10 @@
     private NetSchool.Web.Services.CardCollectionActions.CardCollectionActionsBase cardActions;
     private string searchString = string.Empty;
     private MudForm form = default!;
+    private string promptText = string.Empty;
     [SupplyParameterFromQuery] public Guid collectionId { get; set; }
+    private bool showAiBlock = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -148,6 +170,18 @@
         cardModel.Id = Guid.NewGuid();
 
         cardActions.AddCard(cardModel);
+    }
+
+    private async Task GenerateCardsWithAI(string prompt)
+    {
+        try
+        {
+            await cardActions.GenerateWithAI(prompt);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Failed to generate cards: {ex.Message}", Severity.Error);
+        }
     }
 
     private async Task EditCard(CardModel model)
@@ -213,4 +247,8 @@
         }
     }
 
+    private void ToggleAiBlock()
+    {
+        showAiBlock = !showAiBlock;
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using NetSchool.Context.Entities;
+using NetSchool.Services.CardCollections.Cards.Models;
 using NetSchool.Services.CardCollections.Models;
 
 namespace NetSchool.Services.CardCollections.CardCollections;
@@ -14,4 +15,5 @@ public interface ICartCollectionService
     Task DeleteAsync(Guid id);
     Task SendEmailForSubscribersAsync(User user, CardCollection newCollection);
     Task<byte[]> CardCollectionToPdfAsync(Guid collectionId);
+    Task<IEnumerable<CreateCardModel>> GenerateWithAI(string prompt); 
 }

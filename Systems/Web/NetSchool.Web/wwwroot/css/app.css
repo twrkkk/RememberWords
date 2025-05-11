@@ -101,3 +101,13 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.test-results-table .mud-th, .test-results-table .mud-td {
+    padding: 12px;
+    text-align: left; /* Выравнивание по левому краю */
+    vertical-align: middle; /* Центрирование по вертикали */
+}
+
+.test-results-table .mud-th {
+    font-weight: bold;
+}

@@ -1,21 +1,30 @@
 ﻿using NetSchool.Web.Entities.CardCollections;
 using NetSchool.Web.Entities.CardCollections.Enums;
+using NetSchool.Web.Services.CardCollections;
 
 namespace NetSchool.Web.Services.CardCollectionActions;
 
 public abstract class CardCollectionActionsBase
 {
-    protected CardCollectionActionsBase()
+    protected CardCollectionActionsBase(ICardCollectionsService cardService)
     {
         collection = new();
         collection.Cards = new List<CardModel>();
+        this.cardService = cardService;
     }
 
-    public CardCollectionModel collection { get; private set; }
+    public CardCollectionModel collection { get; protected set; }
+    protected readonly ICardCollectionsService cardService;
 
     public virtual void AddCard(CardModel model)
     {
         collection.Cards.Add(model);
+    }
+
+    public virtual void AddCards(CardModel[] models)
+    {
+        foreach (var model in models)
+            AddCard(model);
     }
 
     public virtual void EditCard(CardModel newModel)
@@ -40,4 +49,15 @@ public abstract class CardCollectionActionsBase
     }
 
     public abstract Task SaveChanges(Guid collectionId, CardCollectionSavePeriod SavePeriod);
+    public async Task GenerateWithAI(string prompt)
+    {
+        var result = await cardService.GenerateWithAI(prompt);
+
+        collection.Cards = result.Select(x => new CardModel
+        {
+            Front = x.Front,
+            Reverse = x.Reverse,
+            Id = Guid.NewGuid()
+        }).ToList();
+    }
 }

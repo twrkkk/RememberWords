@@ -8,12 +8,10 @@ namespace NetSchool.Web.Services.CardCollectionActions
     public class CreateCardCollectionActions : CardCollectionActionsBase
     {
         private readonly AuthenticationStateProvider authProvider;
-        private readonly ICardCollectionsService cardService;
 
-        public CreateCardCollectionActions(AuthenticationStateProvider authProvider, ICardCollectionsService cardService)
+        public CreateCardCollectionActions(AuthenticationStateProvider authProvider, ICardCollectionsService cardService): base(cardService)
         {
             this.authProvider = authProvider;
-            this.cardService = cardService;
         }
 
         public override async Task SaveChanges(Guid collectionId, CardCollectionSavePeriod SavePeriod)
@@ -32,7 +30,7 @@ namespace NetSchool.Web.Services.CardCollectionActions
             {
                 await cardService.Create(createdCollection);
             }
-            catch 
+            catch
             {
                 throw;
             }

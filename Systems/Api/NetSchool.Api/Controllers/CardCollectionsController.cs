@@ -5,6 +5,9 @@ using NetSchool.Services.CardCollections;
 using NetSchool.Services.CardCollections.CardCollections;
 using NetSchool.Services.CardCollections.Models;
 using NetSchool.Services.Logger;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace NetSchool.Api.Controllers
 {
@@ -87,5 +90,14 @@ namespace NetSchool.Api.Controllers
             await _cartCollectionService.DeleteAsync(id);
             return Ok();
         }
+
+        [HttpGet("GenerateWithAI")]
+        public async Task<IActionResult> GenerateCards([FromQuery] string prompt)
+        {
+            var result = await _cartCollectionService.GenerateWithAI(prompt);
+
+            return Ok(result);
+        }
+
     }
 }
