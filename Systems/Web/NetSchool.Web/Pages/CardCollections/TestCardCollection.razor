@@ -47,6 +47,10 @@
                     }
                 </MudStack>
                 <MudDivider Class="my-4" />
+                @if (currentQuestionIndex < questions.Count - 1)
+                {
+                    <MudButton OnClick="() => GoToQuestion(++currentQuestionIndex)" Variant="Variant.Filled" Color="Color.Primary">Next</MudButton>
+                }
                 <MudButton OnClick="FinishTest" Variant="Variant.Filled" Color="Color.Error">Finish Test</MudButton>
             </MudPaper>
         </MudItem>

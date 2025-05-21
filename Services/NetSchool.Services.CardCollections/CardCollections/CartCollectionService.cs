@@ -291,6 +291,7 @@ public class CartCollectionService : ICartCollectionService
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
+        logger.Information(content);
 
         var gptResponse = System.Text.Json.JsonSerializer.Deserialize<GenerateCollectionResponse>(content);
         var rawJson = gptResponse?.result?.alternatives?.FirstOrDefault()?.message?.text;

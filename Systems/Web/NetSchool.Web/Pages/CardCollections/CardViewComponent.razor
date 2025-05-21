@@ -1,23 +1,25 @@
 ﻿<MudCard title="Just click on me to flip card" Class="card" @onclick="ToggleCard">
-    @if (showFront)
-        Text = Front;
-    else
-        Text = Reverse;
-
     <MudCardContent style="display: flex; justify-content: center; align-items: center; text-align: center; height: 100%;">
-        <p>@Text</p>
+        <p>@(IsFrontVisible ? Front : Reverse)</p>
     </MudCardContent>
 </MudCard>
 
 @code {
     [Parameter] public string Front { get; set; }
     [Parameter] public string Reverse { get; set; }
-    private string Text { get; set; }
-    bool showFront = true;
+    [Parameter] public bool IsFrontVisible { get; set; }
+    [Parameter] public EventCallback<bool> IsFrontVisibleChanged { get; set; }
+    [Parameter] public EventCallback OnReveal { get; set; }
 
-    void ToggleCard()
+    private async Task ToggleCard()
     {
-        showFront = !showFront;
+        var newValue = !IsFrontVisible;
+        await IsFrontVisibleChanged.InvokeAsync(newValue);
+
+        if (!newValue)
+        {
+            await OnReveal.InvokeAsync();
+        }
     }
 }
 
@@ -34,5 +36,4 @@
         height: 70%;
         word-break: break-all;
     }
-
 </style>
