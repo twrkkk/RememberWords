@@ -1,56 +1,38 @@
 version: '3.4'
-
 services:
-
   memorizing_postgresql:
-    image: postgres:14.1
-    
+    image: 'postgres:14.1'
   memorizing_rabbitmq:
-    image: rabbitmq:management
-            
+    image: 'rabbitmq:management'
   memorizing_api:
-    image: ${DOCKER_REGISTRY-}memorizingapi
+    image: '${DOCKER_REGISTRY-}memorizingapi'
     build:
       context: .
       dockerfile: Systems/Api/NetSchool.Api/Dockerfile
     depends_on:
       - memorizing_postgresql
       - memorizing_rabbitmq
-
   memorizing_identity:
-    image: ${DOCKER_REGISTRY-}memorizingidentity
+    image: '${DOCKER_REGISTRY-}memorizingidentity'
     build:
       context: .
       dockerfile: Systems/Identity/NetSchool.Identity/Dockerfile
     depends_on:
       - memorizing_postgresql
       - memorizing_api
-
   dsrnetschool_worker_1:
-   image: ${DOCKER_REGISTRY-}netschoolworker
-   build:
-     context: .
-     dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
-   depends_on:
-     - memorizing_postgresql
-     - memorizing_rabbitmq
-     - memorizing_api
-
-  # dsrnetschool_worker_2:
-  #  image: ${DOCKER_REGISTRY-}netschoolworker
-  #  build:
-  #    context: .
-  #    dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
-  #  depends_on:
-  #    - memorizing_postgresql
-  #    - memorizing_rabbitmq
-  #    - memorizing_api
-
-  memorizing_blazorapp:
-    image: blazorapp
+    image: '${DOCKER_REGISTRY-}netschoolworker'
     build:
-     context: .
-     dockerfile: Systems/Web/NetSchool.Web/Dockerfile
-
+      context: .
+      dockerfile: Systems/Worker/NetSchool.Worker/Dockerfile
+    depends_on:
+      - memorizing_postgresql
+      - memorizing_rabbitmq
+      - memorizing_api
+  memorizing_blazorapp:
+    image: '${DOCKER_REGISTRY-}blazorapp'
+    build:
+      context: .
+      dockerfile: Systems/Web/NetSchool.Web/Dockerfile
   redis:
-    image: redis:latest
+    image: 'redis:latest'

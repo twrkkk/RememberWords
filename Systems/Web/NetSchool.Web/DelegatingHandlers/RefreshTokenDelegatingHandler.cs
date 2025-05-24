@@ -58,7 +58,7 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
     {
         var refreshToken = await _localStorage.GetItemAsync<string>(Constants.LocalStorageRefreshTokenKey);
 
-        var url = $"{Settings.IdentityRoot}/connect/token";
+        var url = $"connect/token";
 
         var request_body = new[]
         {
@@ -70,7 +70,7 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
 
         var requestContent = new FormUrlEncodedContent(request_body);
 
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
 
         var refreshTokenResponse = await httpClient.PostAsync(url, requestContent);
 

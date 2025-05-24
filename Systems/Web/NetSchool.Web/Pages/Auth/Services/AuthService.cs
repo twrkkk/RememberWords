@@ -28,7 +28,7 @@ public class AuthService : IAuthService
 
     public async Task<LoginResult> Login(LoginModel loginModel)
     {
-        var url = $"{Settings.IdentityRoot}/connect/token";
+        var url = $"connect/token";
 
         var request_body = new[] 
         {
@@ -41,7 +41,7 @@ public class AuthService : IAuthService
 
         var requestContent = new FormUrlEncodedContent(request_body);
 
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient("delegatingClient");
 
         var response = await httpClient.PostAsync(url, requestContent);
 
