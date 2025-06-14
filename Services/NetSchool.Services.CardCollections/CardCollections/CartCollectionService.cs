@@ -266,24 +266,19 @@ public class CartCollectionService : ICartCollectionService
 
     public async Task<IEnumerable<CreateCardModel>> GenerateWithAI(string prompt)
     {
-        var a = new[]
+        var generatedMessages = new[]
             {
                 new
                 {
                     role = "user",
                     text = $"Сгенерируй набор из 10 элементов такого вида [{{\"Front\": \"term\", \"Reverse\": \"definition\"}}] на тему: {prompt}"
-                },
-                new
-                {
-                    role = "system",
-                    text = "a"
                 }
             };
         var requestContent = new StringContent(System.Text.Json.JsonSerializer.Serialize(new
         {
             modelUri = "gpt://b1ghqukph951bqa0oejt/yandexgpt/rc",
             completionOptions = new { maxTokens = 600, temperature = 1 },
-            messages = a
+            messages = generatedMessages
         }), Encoding.UTF8, "application/json");
 
         var client = _httpClientFactory.CreateClient("YandexGPT");
@@ -296,10 +291,6 @@ public class CartCollectionService : ICartCollectionService
         var gptResponse = System.Text.Json.JsonSerializer.Deserialize<GenerateCollectionResponse>(content);
         var rawJson = gptResponse?.result?.alternatives?.FirstOrDefault()?.message?.text;
 
-        //if (string.IsNullOrWhiteSpace(rawJson))
-        //{
-        //    throw new GenerateCollectionException("Empty response from AI");
-        //}
         rawJson = rawJson.Trim('`');
 
         var cards = System.Text.Json.JsonSerializer.Deserialize<List<CreateCardModel>>(rawJson, new JsonSerializerOptions

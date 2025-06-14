@@ -201,9 +201,13 @@
         if (grade >= 3)
         {
             card.Repetition++;
-            if (card.Repetition == 1) card.Interval = 1;
-            else if (card.Repetition == 2) card.Interval = 6;
-            else card.Interval = (int)Math.Round(card.Interval * card.Easiness);
+
+            if (card.Repetition == 1)
+                card.Interval = 1;
+            else if (card.Repetition == 2)
+                card.Interval = 6;
+            else
+                card.Interval = (int)Math.Round(card.Interval * card.Easiness);
         }
         else
         {
@@ -212,23 +216,25 @@
         }
 
         card.Easiness += 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02);
-        if (card.Easiness < 1.3) card.Easiness = 1.3;
+        if (card.Easiness < 1.3)
+            card.Easiness = 1.3;
 
         card.NextReviewDate = DateTime.Today.AddDays(card.Interval);
 
-        // Сброс состояний всех карточек
         foreach (var c in _collection.Cards)
             c.IsAnswerRevealed = false;
 
         Snackbar.Add($"Card rated {grade}. Next review in {card.Interval} day(s).", Severity.Success);
 
-        _collection.Cards = _collection.Cards.OrderByDescending(c => c.NextReviewDate <= DateTime.Today ? 1 : 0)
-                                             .ThenBy(c => c.NextReviewDate)
-                                             .ThenBy(_ => Guid.NewGuid())
-                                             .ToList();
+        _collection.Cards = _collection.Cards
+            .OrderByDescending(c => c.NextReviewDate <= DateTime.Today ? 1 : 0)
+            .ThenBy(c => c.NextReviewDate)
+            .ThenBy(_ => Guid.NewGuid())
+            .ToList();
 
         selectedIndex = 0;
     }
+
 }
 
 <script type="text/javascript">

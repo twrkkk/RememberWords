@@ -30,13 +30,13 @@
         <MudTextField Immediate="true" @bind-Value="searchString" OnKeyDown="OnEnterDown" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Id</MudTh>
+        <MudTh>Number</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>TimeExpiration</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="#">@(collections.IndexOf(context)+1)</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="TimeExpiration">@context.TimeExpiraton</MudTd>
             <MudTd>
@@ -56,7 +56,7 @@
 </MudTable>
 
 @code {
-    private IEnumerable<CardCollectionModel> collections = new List<CardCollectionModel>();
+    private List<CardCollectionModel> collections = new List<CardCollectionModel>();
     private string searchString = string.Empty;
     private Guid userId;
 
@@ -65,9 +65,9 @@
         try
         {
             if (string.IsNullOrEmpty(searchString))
-                collections = await CardCollectionsService.GetAll();
+                collections = (await CardCollectionsService.GetAll()).ToList();
             else
-                collections = await CardCollectionsService.GetAllWithName(searchString);
+                collections = (await CardCollectionsService.GetAllWithName(searchString)).ToList();
         }
         catch (Exception ex)
         {
